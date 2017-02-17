@@ -1,0 +1,43 @@
+{
+	"name": "FormulaOne",
+	"description": "React Native app for Formula One, statistics for drivers and teams and calendar for Formula One",
+	"version": "1.0.0",
+  "author": {
+    "name": "Srdjan Prpa <srdjanprpa@gmail.com>",
+    "url": "http://srdjanprpa.com"
+  },
+	"scripts": {
+		"pretest": "eslint src/",
+		"ios": "react-native run-is",
+		"android": "react-native run-android"
+	},
+	"dependencies": {
+		"moment": "^2.17.1",
+    "moment-timezone": "^0.5.11",
+		"react": "15.4.2",
+		"react-native": "0.41.2",
+		"react-native-splash-screen": "^2.0.0",
+    "react-navigation": "git@github.com:srdjanprpa/react-navigation.git"
+	},
+	"devDependencies": {
+    "babel-eslint": "^7.1.1",
+    "babel-jest": "18.0.0",
+    "babel-preset-react-native": "1.9.1",
+    "eslint": "^3.15.0",
+    "eslint-plugin-react": "^6.9.0",
+    "jest": "18.1.0",
+    "react-test-renderer": "15.4.2"
+  },
+  "rnpm": {
+    "assets": [
+      "assets/fonts"
+    ]
+  },
+	"repository": {
+    "type": "git",
+    "url": "git@github.com:srdjanprpa/FormulaOne.git"
+  },
+  "jest": {
+    "preset": "react-native"
+  }
+}
