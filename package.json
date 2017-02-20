@@ -8,6 +8,7 @@
   },
   "scripts": {
     "pretest": "eslint src/",
+    "test": "jest",
     "ios": "react-native run-ios",
     "android": "react-native run-android"
   },
