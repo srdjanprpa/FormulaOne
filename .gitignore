@@ -1,7 +1,7 @@
 # OSX
 #
 .DS_Store
-!design/
+__design/
 build.prod.gradle
 
 # Xcode
