@@ -1,4 +1,4 @@
-package com.formulaone;
+package com.formula1info;
 
 import android.app.Application;
 import android.util.Log;

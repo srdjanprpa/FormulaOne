@@ -6,7 +6,6 @@ import {
   Text,
   StyleSheet,
   ListView,
-  Image,
   ActivityIndicator,
   AsyncStorage,
   RefreshControl,
@@ -134,14 +133,9 @@ export default class DriversScreen extends React.Component {
   }
 
   renderRow(rowData) {
-    const driver = `${rowData.Driver.givenName.toLowerCase()}-${rowData.Driver.familyName.toLowerCase()}`
-    const imgDriver = driver.replace(/ä/g, 'a').replace(/ö/g, 'o').replace(/é/g, 'e').replace(/ü/g, 'u')
-
     return (
       <View style={styles.driver}>
         <View style={styles.avatarBox}>
-          <Image style={styles.avatar}
-                 source={{uri: `https://www.formula1.com/content/fom-website/en/championship/drivers/${imgDriver}/_jcr_content/image.img.320.medium.jpg`}} />
           <Text style={styles.avatarTxt}>{rowData.position}</Text>
         </View>
         <View style={styles.info}>
