@@ -18,8 +18,7 @@ export default class StatsHeader extends React.Component {
       <View style={styles.header}>
         <Text style={styles.position}>#</Text>
         <Text style={styles.name}> {this.props.name} </Text>
-        <Text style={styles.wins}>Wins</Text>
-        <Text style={styles.points}>Points</Text>
+        <Text style={styles.time}>Time</Text>
       </View>
     )
   }
@@ -48,15 +47,8 @@ const styles = StyleSheet.create({
     height: 22,
     lineHeight: Platform.OS === 'ios' ? 22 : 20,
   },
-  wins: {
-    width: 45,
-    height: 22,
-    lineHeight: Platform.OS === 'ios' ? 22 : 20,
-    color: '#fff',
-    textAlign: 'center'
-  },
-  points: {
-    width: 50,
+  time: {
+    width: 80,
     height: 22,
     lineHeight: Platform.OS === 'ios' ? 22 : 20,
     color: '#fff',

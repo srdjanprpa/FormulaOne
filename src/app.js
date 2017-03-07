@@ -3,16 +3,13 @@
 import React from 'react'
 
 import {
-  Platform,
-} from 'react-native'
-
-import {
   StackNavigator,
   DrawerNavigator
 } from 'react-navigation'
 
 import StandingsScreen from './Standings/Standings'
 import CalendarScreen from './Calendar/Calendar'
+import CircuitScreen from './Circuit/Circuit'
 import SlideMenu from './Components/SlideMenu'
 
 const MainScreen = DrawerNavigator(
@@ -39,16 +36,21 @@ const MainScreen = DrawerNavigator(
   }
 )
 
-const ExampleRoutes = {
+const F1Routes = {
   MainScreen: {
     name: 'MainScreen',
     screen: MainScreen,
+  },
+  CircuitScreen: {
+    name: 'CircuitScreen',
+    screen: CircuitScreen,
+    path: 'circuit/:detail',
   },
 }
 
 const AppNavigator = StackNavigator(
   {
-    ...ExampleRoutes,
+    ...F1Routes,
     Index: {
       screen: MainScreen,
     },
@@ -61,7 +63,7 @@ const AppNavigator = StackNavigator(
      * Use modal on iOS because the card mode comes from the right,
      * which conflicts with the drawer example gesture
      */
-    mode: Platform.OS === 'ios' ? 'modal' : 'card',
+    mode: 'card'
   }
 )
 

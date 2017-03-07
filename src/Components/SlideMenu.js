@@ -59,7 +59,8 @@ export default class SlideMenu extends React.Component {
 
 const styles = StyleSheet.create({
   content: {
-    flex: 1
+    flex: 1,
+    backgroundColor: '#202930',
   },
   menuImg: {
     position: 'relative',

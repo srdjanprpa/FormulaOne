@@ -14,6 +14,7 @@ import {
   ActivityIndicator,
   RefreshControl,
   Platform,
+  TouchableOpacity,
 } from 'react-native'
 
 import moment from 'moment-timezone'
@@ -47,8 +48,8 @@ export default class CalendarScreen extends React.Component {
     }),
   }
 
-  _getCalendar() {
-    api.getCalendar(moment().format('YYYY'))
+  _getCurrentCalendar() {
+    api.getCurrentCalendar(moment().format('YYYY'))
       .then((races) => {
         const calendar = {
           raceTable: races.MRData.RaceTable.Races,
@@ -78,12 +79,12 @@ export default class CalendarScreen extends React.Component {
     AsyncStorage.getItem('calendar')
       .then((value) => {
         if (!value) {
-          this._getCalendar()
+          this._getCurrentCalendar()
           return
         }
         const calendar = JSON.parse(value)
         if (moment().unix() > calendar.expireTime) {
-          this._getCalendar()
+          this._getCurrentCalendar()
         } else {
           this.setState({
             isLoading: false,
@@ -92,7 +93,7 @@ export default class CalendarScreen extends React.Component {
         }
       })
       .catch(() => {
-        this._getCalendar()
+        this._getCurrentCalendar()
       })
   }
 
@@ -124,8 +125,6 @@ export default class CalendarScreen extends React.Component {
       }
     }
 
-// (!this.state.isLoading && this.state.calendar && this.state.calendar._cachedRowCount > 0 && this.state.error)
-
     return (
       <View style={styles.container}>
         <StatusBar
@@ -143,7 +142,7 @@ export default class CalendarScreen extends React.Component {
     const time = `${rowData.date}T${rowData.time}`
 
     const content = (
-      <View style={styles.row}>
+      <TouchableOpacity style={styles.row} onPress={() => this.props.navigation.navigate('CircuitScreen', {detail: rowData})}>
         <View style={styles.dateContainer}>
           <Text style={styles.dateText}>{moment(time).tz('Europe/Belgrade').format('MMM DD')}</Text>
           <Text style={styles.dateText}>{moment(time).tz('Europe/Belgrade').format('HH:mm')}</Text>
@@ -155,7 +154,7 @@ export default class CalendarScreen extends React.Component {
             <Text style={styles.raceLocation}>{rowData.Circuit.Location.locality}</Text>
           </View>
         </View>
-      </View>
+      </TouchableOpacity>
     )
 
     if ((this.state.calendar._cachedRowCount - 1) == rowID) {
@@ -179,24 +178,6 @@ export default class CalendarScreen extends React.Component {
     )
   }
 
-  // return (
-  //   <View>
-  //     <TouchableOpacity onPress={() => this._onRowPressed(rowData)} key={rowID}>
-  //       { content }
-  //     </TouchableOpacity>
-  //   </View>
-  // );
-
-  // _onRowPressed(rowData) {
-  //   let route = {
-  //     name: 'details',
-  //     title: 'Talk Details',
-  //     talkInfo: rowData
-  //   };
-  //
-  //   this.props.navigator.push(route);
-  // }
-  //
   _refreshControl() {
     return (
       <RefreshControl
@@ -208,7 +189,7 @@ export default class CalendarScreen extends React.Component {
   _refreshListView() {
     //Start Rendering Spinner
     this.setState({refreshing: true})
-    this._getCalendar()
+    this._getCurrentCalendar()
   }
 }
 
@@ -241,12 +222,12 @@ const styles = StyleSheet.create({
     height: 50,
   },
   dateContainer: {
-    width: 50,
+    width: 60,
   },
   dateText: {
     fontFamily: 'Raleway-Medium',
     fontSize: 12,
-    lineHeight: 14,
+    lineHeight: 16,
     color: '#f94057',
     textAlign: 'right',
   },

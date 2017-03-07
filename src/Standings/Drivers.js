@@ -140,10 +140,10 @@ export default class DriversScreen extends React.Component {
         </View>
         <View style={styles.info}>
           <Text style={styles.name}><Text style={styles.number}>{rowData.Driver.permanentNumber}</Text> {rowData.Driver.givenName} {rowData.Driver.familyName}</Text>
-          <Text style={styles.constructor}>{rowData.Constructors[0].name}</Text>
+          <Text style={styles.teamConstructor}>{rowData.Constructors[0].name}</Text>
         </View>
-        <View style={styles.position}><Text style={styles.wins}>{rowData.wins}</Text></View>
-        <View style={styles.position}><Text style={styles.points}>{rowData.points}</Text></View>
+        <View style={styles.winsBox}><Text style={styles.wins}>{rowData.wins}</Text></View>
+        <View style={styles.pointsBox}><Text style={styles.points}>{rowData.points}</Text></View>
       </View>
     )
   }
@@ -182,13 +182,13 @@ const styles = StyleSheet.create({
     borderBottomColor: '#f1f2f6'
   },
   avatarBox: {
-    width: 40,
+    width: 30,
     height: 40,
     justifyContent: 'center',
     overflow: 'hidden',
     zIndex: 10,
     borderRadius: 20,
-    marginRight: 15,
+    marginRight: 10,
     position: 'relative',
   },
   avatar: {
@@ -206,12 +206,12 @@ const styles = StyleSheet.create({
     left: 0,
     zIndex: -1,
     fontFamily: 'Raleway-Medium',
-    fontSize: 20,
+    fontSize: 16,
     textAlign: 'center',
     justifyContent: 'center',
     color: '#f94057',
     lineHeight: Platform.OS === 'ios' ? 40 : 30,
-    width: 40,
+    width: 30,
     height: 40,
   },
   info: {
@@ -226,15 +226,19 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     color: '#444'
   },
-  constructor: {
+  teamConstructor: {
     fontFamily: 'Raleway-Medium',
     fontSize: 12,
     lineHeight: 12,
     color: '#819cad',
     paddingTop: 5
   },
-  position: {
+  winsBox: {
     width: 45,
+    height: 40
+  },
+  pointsBox: {
+    width: 50,
     height: 40
   },
   wins: {

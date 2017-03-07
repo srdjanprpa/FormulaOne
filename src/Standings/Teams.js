@@ -135,14 +135,12 @@ export default class TeamsScreen extends React.Component {
   renderRow(rowData) {
     return (
       <View style={styles.team}>
-        <View style={styles.number}>
-          <Text style={styles.numberTxt}>{rowData.position}</Text>
-        </View>
+        <Text style={styles.numberTxt}>{rowData.position}</Text>
         <View style={styles.info}>
-          <Text style={styles.constructor}>{rowData.Constructor.name}</Text>
+          <Text style={styles.teamConstructor}>{rowData.Constructor.name}</Text>
         </View>
-        <View style={styles.position}><Text style={styles.wins}>{rowData.wins}</Text></View>
-        <View style={styles.position}><Text style={styles.points}>{rowData.points}</Text></View>
+        <View style={styles.winsBox}><Text style={styles.wins}>{rowData.wins}</Text></View>
+        <View style={styles.pointsBox}><Text style={styles.points}>{rowData.points}</Text></View>
       </View>
     )
   }
@@ -172,12 +170,10 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#f1f2f6'
   },
-  number: {
-    width: 40,
-    marginRight: 15,
-    justifyContent: 'center',
-  },
   numberTxt: {
+    width: 30,
+    marginRight: 10,
+    justifyContent: 'center',
     fontFamily: 'Raleway-Medium',
     fontSize: 16,
     textAlign: 'center',
@@ -187,12 +183,12 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
   },
-  constructor: {
+  teamConstructor: {
     fontFamily: 'Raleway-SemiBold',
     fontSize: 16,
     color: '#444'
   },
-  position: {
+  winsBox: {
     width: 45,
     justifyContent: 'center',
   },
@@ -201,6 +197,10 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontFamily: 'Raleway-Medium',
     fontSize: 16
+  },
+  pointsBox: {
+    width: 50,
+    justifyContent: 'center',
   },
   points: {
     color: '#f94057',
