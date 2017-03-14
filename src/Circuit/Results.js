@@ -181,7 +181,7 @@ const styles = StyleSheet.create({
     paddingTop: 5
   },
   status: {
-    width: 80,
+    width: 90,
   },
   statusTime: {
     fontFamily: 'Raleway-SemiBold',

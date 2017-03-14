@@ -193,13 +193,13 @@ const styles = StyleSheet.create({
     paddingTop: 5
   },
   status: {
-    width: 83,
+    width: 90,
   },
   statusBox: {
     flexDirection: 'row',
   },
   statusTxt: {
-    width: 23,
+    width: 27,
     fontFamily: 'Raleway-Medium',
     color: '#f94057',
   },

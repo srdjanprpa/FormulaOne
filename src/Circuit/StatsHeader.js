@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
     lineHeight: Platform.OS === 'ios' ? 22 : 20,
   },
   time: {
-    width: 80,
+    width: 90,
     height: 22,
     lineHeight: Platform.OS === 'ios' ? 22 : 20,
     color: '#fff',
