@@ -24,14 +24,23 @@ npm install
 **For Android:**   
 `react-native run-android` or `npm run android`
 
+### What's included
 
-### Module that I used
-
-- [React Navigation](https://github.com/react-community/react-navigation)  
-- [React Native Splash Screen](https://github.com/crazycodeboy/react-native-splash-screen)  
+- [React Native](https://facebook.github.io/react-native/)
+- [React Navigation](https://github.com/react-community/react-navigation)
+- [React Native Splash Screen](https://github.com/crazycodeboy/react-native-splash-screen)
 - [Moment](https://github.com/moment/moment)
 - [Moment Timezone](https://github.com/moment/moment)
+- [ESLint](http://eslint.org/)
 
+### Requirements
+
+- [Node](https://nodejs.org) `4.x` or newer
+- [React Native](http://facebook.github.io/react-native/docs/getting-started.html) for development
+- [Android Studio](https://developer.android.com/studio/index.html) for Android development
+- [Xcode](https://developer.apple.com/xcode/) for iOS development
+- [Android SDK](https://developer.android.com/sdk/) `23.0.1` or newer for Android development
+- [Genymotion](https://www.genymotion.com/) for Android emulation
 
 ### Contribute
 
