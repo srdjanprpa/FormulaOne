@@ -5,6 +5,9 @@ React Native app for Formula One, statistics for drivers and teams and calendar 
 ![Formula-One-APP](https://raw.githubusercontent.com/srdjanprpa/FormulaOne/master/assets/AppScreen/AppImg-1.png)
 ![Formula-One-APP](https://raw.githubusercontent.com/srdjanprpa/FormulaOne/master/assets/AppScreen/AppImg-2.png)
 
+### Download
+[Google Play Store](https://play.google.com/store/apps/details?id=com.formula1info)  
+![Google-Play-Store](https://raw.githubusercontent.com/srdjanprpa/FormulaOne/master/assets/info/GooglePlayStore.png)
 
 ### Instalation
 
