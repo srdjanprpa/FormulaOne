@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
   btn: {
     height: 60,
     width: 60,
-    marginBottom: 17,
+    marginBottom: Platform.OS === 'ios' ? 17 : 20,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
     width: 40,
   },
   headerTitle: {
-    top: 40,
+    top: Platform.OS === 'ios' ? 40 : 35,
     alignItems: 'center',
     justifyContent: 'center',
     position: 'absolute',
