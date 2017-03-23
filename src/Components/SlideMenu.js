@@ -5,11 +5,12 @@ import React from 'react'
 
 import {
   View,
-  Text,
   StyleSheet,
   Image,
   TouchableHighlight
 } from 'react-native'
+
+import ScalableText from 'react-native-text'
 
 export default class SlideMenu extends React.Component {
   static propTypes = {
@@ -46,9 +47,9 @@ export default class SlideMenu extends React.Component {
             key={route.routeName}>
             <View style={styles.btnBox}>
               {icon(index)}
-              <Text style={[styles.btnTxt, this.props.navigation.state.index === index ? styles.btnTxtActive : {}]}>
+              <ScalableText style={[styles.btnTxt, this.props.navigation.state.index === index ? styles.btnTxtActive : {}]}>
                 {route.routeName.toUpperCase()}
-              </Text>
+              </ScalableText>
             </View>
           </TouchableHighlight>
         ))}

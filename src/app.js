@@ -7,10 +7,11 @@ import {
   DrawerNavigator
 } from 'react-navigation'
 
-import StandingsScreen from './Standings/Standings'
-import CalendarScreen from './Calendar/Calendar'
-import CircuitScreen from './Circuit/Circuit'
-import SlideMenu from './Components/SlideMenu'
+import StandingsScreen      from './Standings/Standings'
+import CalendarScreen       from './Calendar/Calendar'
+import CircuitScreen        from './Circuit/Circuit'
+import ConstructorScreen    from './Constructor/Constructor'
+import SlideMenu            from './Components/SlideMenu'
 
 const MainScreen = DrawerNavigator(
   {
@@ -45,6 +46,11 @@ const F1Routes = {
     name: 'CircuitScreen',
     screen: CircuitScreen,
     path: 'circuit/:detail',
+  },
+  ConstructorScreen: {
+    name: 'ConstructorScreen',
+    screen: ConstructorScreen,
+    path: 'constructor/:detail',
   },
 }
 

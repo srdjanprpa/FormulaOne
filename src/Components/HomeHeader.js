@@ -5,12 +5,13 @@ import React from 'react'
 
 import {
   StyleSheet,
-  Text,
   View,
   TouchableHighlight,
   Image,
   Platform
 } from 'react-native'
+
+import ScalableText from 'react-native-text'
 
 export default class HomeHeader extends React.Component {
   static propTypes = {
@@ -31,7 +32,7 @@ export default class HomeHeader extends React.Component {
             style={styles.btnLeft}
             source={require('../../assets/images/btn-menu.png')} />
         </TouchableHighlight>
-        <Text style={styles.title}>{this.props.title}</Text>
+        <ScalableText style={styles.title}>{this.props.title}</ScalableText>
       </View>
     )
   }

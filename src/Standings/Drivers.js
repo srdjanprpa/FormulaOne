@@ -1,17 +1,20 @@
 /* @flow */
+/* eslint no-undef: "error" */
+/* eslint-env node */
 import React from 'react'
 
 import {
   View,
-  Text,
   StyleSheet,
   ListView,
   ActivityIndicator,
   AsyncStorage,
   RefreshControl,
   Platform,
+  Image,
 } from 'react-native'
 
+import ScalableText from 'react-native-text'
 import moment from 'moment'
 
 import StatsHeader from './StatsHeader'
@@ -106,7 +109,7 @@ export default class DriversScreen extends React.Component {
         <View style={styles.container}>
           <StatsHeader name={this.props.navigation.state.routeName} />
           { this.state.drivers && this.state.drivers._cachedRowCount > 0 && this.state.error ?
-            <View style={styles.errMsg}><Text style={styles.errMsgTxt}>Unable to load new data!</Text></View> :
+            <View style={styles.errMsg}><ScalableText style={styles.errMsgTxt}>Unable to load new data!</ScalableText></View> :
             <View></View>
           }
           <ListView
@@ -136,14 +139,22 @@ export default class DriversScreen extends React.Component {
     return (
       <View style={styles.driver}>
         <View style={styles.avatarBox}>
-          <Text style={styles.avatarTxt}>{rowData.position}</Text>
+          <Image style={styles.avatar}
+                 source={{uri: `https://s3-eu-west-1.amazonaws.com/f1-storage/Drivers/${rowData.Driver.code}.jpg`}}/>
+          <ScalableText style={styles.avatarTxt}>{rowData.position}</ScalableText>
         </View>
         <View style={styles.info}>
-          <Text style={styles.name}><Text style={styles.number}>{rowData.Driver.permanentNumber}</Text> {rowData.Driver.givenName} {rowData.Driver.familyName}</Text>
-          <Text style={styles.teamConstructor}>{rowData.Constructors[0].name}</Text>
+          <ScalableText style={styles.name}>
+            <ScalableText style={styles.number}>{rowData.Driver.permanentNumber}</ScalableText> {rowData.Driver.givenName} {rowData.Driver.familyName}
+          </ScalableText>
+          <ScalableText style={styles.teamConstructor}>{rowData.Constructors[0].name}</ScalableText>
         </View>
-        <View style={styles.winsBox}><Text style={styles.wins}>{rowData.wins}</Text></View>
-        <View style={styles.pointsBox}><Text style={styles.points}>{rowData.points}</Text></View>
+        <View style={styles.winsBox}><ScalableText style={styles.wins}>{rowData.wins}</ScalableText></View>
+        <View style={styles.pointsBox}>
+          <ScalableText style={styles.points}>{rowData.points}</ScalableText>
+            <Image style={styles.flag}
+                   source={{uri: `https://s3-eu-west-1.amazonaws.com/f1-storage/Flags/${rowData.Driver.nationality}.png`}}/>
+        </View>
       </View>
     )
   }
@@ -182,23 +193,23 @@ const styles = StyleSheet.create({
     borderBottomColor: '#f1f2f6'
   },
   avatarBox: {
-    width: 30,
-    height: 40,
+    width: 35,
+    height: 35,
+    borderRadius: 20,
     justifyContent: 'center',
     overflow: 'hidden',
-    zIndex: 10,
-    borderRadius: 20,
     marginRight: 10,
     position: 'relative',
+    zIndex: 10,
+    top: 3,
   },
   avatar: {
     position: 'relative',
+    top: 0,
+    right: 0,
     zIndex: 2,
-    top: 22,
-    borderRadius: 20,
-    right: 22,
-    width: 85,
-    height: 85
+    width: 35,
+    height: 35
   },
   avatarTxt: {
     position: 'absolute',
@@ -237,10 +248,6 @@ const styles = StyleSheet.create({
     width: 45,
     height: 40
   },
-  pointsBox: {
-    width: 50,
-    height: 40
-  },
   wins: {
     width: 45,
     height: 40,
@@ -248,11 +255,22 @@ const styles = StyleSheet.create({
     fontFamily: 'Raleway-Medium',
     fontSize: 16
   },
+  pointsBox: {
+    width: 50,
+    height: 40,
+    alignItems: 'flex-end'
+  },
   points: {
     color: '#f94057',
     fontFamily: 'Raleway-SemiBold',
     textAlign: 'right',
     fontSize: 16,
     lineHeight: 20
+  },
+  flag: {
+    height: 11,
+    width: 16,
+    marginTop: 3,
+    alignItems: 'flex-end'
   }
 })

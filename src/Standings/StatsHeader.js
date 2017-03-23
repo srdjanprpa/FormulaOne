@@ -3,10 +3,11 @@ import React from 'react'
 
 import {
   View,
-  Text,
   StyleSheet,
   Platform,
 } from 'react-native'
+
+import ScalableText from 'react-native-text'
 
 export default class StatsHeader extends React.Component {
   static propTypes = {
@@ -16,10 +17,10 @@ export default class StatsHeader extends React.Component {
   render() {
     return (
       <View style={styles.header}>
-        <Text style={styles.position}>#</Text>
-        <Text style={styles.name}> {this.props.name} </Text>
-        <Text style={styles.wins}>Wins</Text>
-        <Text style={styles.points}>Points</Text>
+        <ScalableText style={styles.position}>#</ScalableText>
+        <ScalableText style={styles.name}> {this.props.name} </ScalableText>
+        <ScalableText style={styles.wins}>Wins</ScalableText>
+        <ScalableText style={styles.points}>Points</ScalableText>
       </View>
     )
   }
@@ -35,7 +36,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   position: {
-    width: 30,
+    width: 35,
     height: 22,
     lineHeight: Platform.OS === 'ios' ? 22 : 20,
     marginRight: 10,

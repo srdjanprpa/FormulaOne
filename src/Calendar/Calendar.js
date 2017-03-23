@@ -5,7 +5,6 @@ import React from 'react'
 
 import {
   View,
-  Text,
   StyleSheet,
   ListView,
   Image,
@@ -17,6 +16,7 @@ import {
   TouchableOpacity,
 } from 'react-native'
 
+import ScalableText from 'react-native-text'
 import moment from 'moment-timezone'
 
 import api from '../Utils/api'
@@ -112,7 +112,7 @@ export default class CalendarScreen extends React.Component {
         return (
           <View style={styles.container}>
             { this.state.calendar && this.state.calendar._cachedRowCount > 0 && this.state.error ?
-              <View style={styles.errMsg}><Text style={styles.errMsgTxt}>Unable to load new data!</Text></View> :
+              <View style={styles.errMsg}><ScalableText style={styles.errMsgTxt}>Unable to load new data!</ScalableText></View> :
               <View></View>
             }
             <ListView
@@ -131,7 +131,7 @@ export default class CalendarScreen extends React.Component {
           barStyle="light-content"
           backgroundColor={'#202930'} />
         <HomeHeader
-          title="Formula One"
+          title="F1 Info"
           navigation={this.props.navigation} />
         <CalendarContent />
       </View>
@@ -142,16 +142,16 @@ export default class CalendarScreen extends React.Component {
     const time = `${rowData.date}T${rowData.time}`
 
     const content = (
-      <TouchableOpacity style={styles.row} onPress={() => this.props.navigation.navigate('CircuitScreen', {detail: rowData})}>
+      <TouchableOpacity style={styles.row} onPress={() => console.log(this.props.navigation.navigate('CircuitScreen', {detail: rowData}))}>
         <View style={styles.dateContainer}>
-          <Text style={styles.dateText}>{moment(time).tz('Europe/Belgrade').format('MMM DD')}</Text>
-          <Text style={styles.dateText}>{moment(time).tz('Europe/Belgrade').format('HH:mm')}</Text>
+          <ScalableText style={styles.dateText}>{moment(time).tz('Europe/Belgrade').format('MMM DD')}</ScalableText>
+          <ScalableText style={styles.dateText}>{moment(time).tz('Europe/Belgrade').format('HH:mm')}</ScalableText>
         </View>
         <View style={styles.details}>
           <View style={styles.circle}></View>
           <View style={styles.raceContent}>
-            <Text style={styles.raceName}>{rowData.raceName}</Text>
-            <Text style={styles.raceLocation}>{rowData.Circuit.Location.locality}</Text>
+            <ScalableText style={styles.raceName}>{rowData.raceName}</ScalableText>
+            <ScalableText style={styles.raceLocation}>{rowData.Circuit.Location.locality}</ScalableText>
           </View>
         </View>
       </TouchableOpacity>

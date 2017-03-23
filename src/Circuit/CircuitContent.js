@@ -3,7 +3,6 @@ import React from 'react'
 
 import {
   View,
-  Text,
   StyleSheet,
   TouchableHighlight,
 } from 'react-native'
@@ -14,6 +13,8 @@ import {
   TabRouter,
   addNavigationHelpers,
 } from 'react-navigation'
+
+import ScalableText from 'react-native-text'
 
 import QualifyingScreen from './Qualifying'
 import ResultsScreen from './Results'
@@ -40,9 +41,11 @@ class CustomTabBar extends React.Component {
             onShowUnderlay={()=>{this.setState({pressed: route.routeName})}}
             style={[styles.tab, this.state.pressed ===  route.routeName ? styles.tabPress : {}]}
             key={route.routeName}>
-            <Text style={[styles.tabTxt, this.props.navigation.state.index === index ? styles.tabTxtActive : {}]}>
-              {route.routeName}
-            </Text>
+            <View>
+              <ScalableText style={[styles.tabTxt, this.props.navigation.state.index === index ? styles.tabTxtActive : {}]}>
+                {route.routeName}
+              </ScalableText>
+            </View>
           </TouchableHighlight>
         ))}
       </View>

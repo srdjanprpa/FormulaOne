@@ -5,7 +5,6 @@ import React from 'react'
 
 import {
   View,
-  Text,
   Image,
   StyleSheet,
   TouchableHighlight,
@@ -13,9 +12,11 @@ import {
 } from 'react-native'
 
 import Dimensions from 'Dimensions'
-const {width} = Dimensions.get('window')
+import ScalableText from 'react-native-text'
 
 import CircuitContent from './CircuitContent'
+
+const { width } = Dimensions.get('window')
 
 export default class CircuitScreen extends React.Component {
   static propTypes = {
@@ -40,6 +41,10 @@ export default class CircuitScreen extends React.Component {
           source={require('../../assets/images/circuit.jpg')}>
         </Image>
         <View style={styles.content}>
+          <View style={styles.headerTitle}>
+            <ScalableText style={styles.headerTxt}>{circuitName}</ScalableText>
+            <ScalableText style={styles.subHeaderTxt}>{locality} {country} ( Round: {round} - {season} )</ScalableText>
+          </View>
           <TouchableHighlight
             style={styles.btn}
             onPress={() => this.props.navigation.goBack()}>
@@ -47,10 +52,6 @@ export default class CircuitScreen extends React.Component {
               style={styles.btnLeft}
               source={require('../../assets/images/btn-back.png')} />
           </TouchableHighlight>
-          <View style={styles.headerTitle}>
-            <Text style={styles.headerTxt}>{circuitName}</Text>
-            <Text style={styles.subHeaderTxt}>{locality} {country} ( Round: {round} - {season} )</Text>
-          </View>
           <CircuitContent info={this.props.navigation.state.params.detail}/>
         </View>
       </View>
@@ -76,15 +77,22 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   btn: {
-    height: 40,
-    width: 40,
+    height: 60,
+    width: 60,
+    marginBottom: 17,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   btnLeft: {
     height: 40,
     width: 40,
   },
   headerTitle: {
+    top: 40,
+    alignItems: 'center',
     justifyContent: 'center',
+    position: 'absolute',
+    width: width,
   },
   headerTxt: {
     color: '#fff',

@@ -25,7 +25,6 @@ export default class StandingsScreen extends React.Component {
   componentDidMount() {
     SplashScreen.hide()
   }
-
   render() {
     return (
       <View style={{flex: 1, backgroundColor: '#fff'}}>
@@ -33,9 +32,11 @@ export default class StandingsScreen extends React.Component {
           barStyle="light-content"
           backgroundColor={'#202930'} />
         <HomeHeader
-          title="Formula One"
+          title="F1 Info"
           navigation={this.props.navigation} />
-        <StandingsContent />
+        <StandingsContent
+          team={(data) => {this.props.navigation.navigate('ConstructorScreen', {team: data})}}
+        />
       </View>
     )
   }

@@ -3,14 +3,15 @@ import React from 'react'
 
 import {
   View,
-  Text,
   StyleSheet,
   ListView,
   ActivityIndicator,
   AsyncStorage,
-  RefreshControl
+  RefreshControl,
+  TouchableOpacity,
 } from 'react-native'
 
+import ScalableText from 'react-native-text'
 import moment from 'moment'
 
 import StatsHeader from './StatsHeader'
@@ -24,6 +25,7 @@ const ds = new ListView.DataSource({
 export default class TeamsScreen extends React.Component {
   static propTypes = {
     navigation: React.PropTypes.object.isRequired,
+    teamInfo: React.PropTypes.func.isRequired,
   }
 
   constructor(props) {
@@ -105,7 +107,7 @@ export default class TeamsScreen extends React.Component {
         <View style={styles.container}>
           <StatsHeader name={this.props.navigation.state.routeName} />
           { this.state.teams && this.state.teams._cachedRowCount > 0 && this.state.error ?
-            <View style={styles.errMsg}><Text style={styles.errMsgTxt}>Unable to load new data!</Text></View> :
+            <View style={styles.errMsg}><ScalableText style={styles.errMsgTxt}>Unable to load new data!</ScalableText></View> :
             <View></View>
           }
           <ListView
@@ -134,14 +136,14 @@ export default class TeamsScreen extends React.Component {
 
   renderRow(rowData) {
     return (
-      <View style={styles.team}>
-        <Text style={styles.numberTxt}>{rowData.position}</Text>
+      <TouchableOpacity style={styles.team} onPress={() => this.props.teamInfo(rowData)}>
+        <ScalableText style={styles.numberTxt}>{rowData.position}</ScalableText>
         <View style={styles.info}>
-          <Text style={styles.teamConstructor}>{rowData.Constructor.name}</Text>
+          <ScalableText style={styles.teamConstructor}>{rowData.Constructor.name}</ScalableText>
         </View>
-        <View style={styles.winsBox}><Text style={styles.wins}>{rowData.wins}</Text></View>
-        <View style={styles.pointsBox}><Text style={styles.points}>{rowData.points}</Text></View>
-      </View>
+        <View style={styles.winsBox}><ScalableText style={styles.wins}>{rowData.wins}</ScalableText></View>
+        <View style={styles.pointsBox}><ScalableText style={styles.points}>{rowData.points}</ScalableText></View>
+      </TouchableOpacity>
     )
   }
 }
@@ -171,7 +173,7 @@ const styles = StyleSheet.create({
     borderBottomColor: '#f1f2f6'
   },
   numberTxt: {
-    width: 30,
+    width: 35,
     marginRight: 10,
     justifyContent: 'center',
     fontFamily: 'Raleway-Medium',

@@ -5,10 +5,11 @@ import React from 'react'
 
 import {
   StyleSheet,
-  Text,
   View,
   Image
 } from 'react-native'
+
+import ScalableText from 'react-native-text'
 
 export default class ErrorPage extends React.Component {
   constructor(props) {
@@ -21,8 +22,8 @@ export default class ErrorPage extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.txt}>Box! Box! Box!</Text>
-        <Text style={styles.txt}>Our pit crew changes something.</Text>
+        <ScalableText style={styles.txt}>Box! Box! Box!</ScalableText>
+        <ScalableText style={styles.txt}>Our pit crew changes something.</ScalableText>
         <Image style={styles.pitStop}
                source={require('../../assets/images/pit-stop.jpg')} />
       </View>

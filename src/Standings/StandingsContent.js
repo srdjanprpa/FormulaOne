@@ -3,7 +3,6 @@ import React from 'react'
 
 import {
   View,
-  Text,
   StyleSheet,
   TouchableHighlight,
 } from 'react-native'
@@ -14,6 +13,8 @@ import {
   TabRouter,
   addNavigationHelpers,
 } from 'react-navigation'
+
+import ScalableText from 'react-native-text'
 
 import DriversScreen from './Drivers'
 import TeamsScreen from './Teams'
@@ -41,9 +42,9 @@ class CustomTabBar extends React.Component {
             style={[styles.tab, this.state.pressed ===  route.routeName ? styles.tabPress : {}]}
             key={route.routeName}>
             <View style={[styles.tabView, this.props.navigation.state.index === index ? styles.tabViewActive : {}, this.state.pressed ===  route.routeName ? styles.tabViewActive : {}]}>
-              <Text style={[styles.tabTxt, this.props.navigation.state.index === index ? styles.tabTxtActive : {}]}>
+              <ScalableText style={[styles.tabTxt, this.props.navigation.state.index === index ? styles.tabTxtActive : {}]}>
                 {route.routeName.toUpperCase()}
-              </Text>
+              </ScalableText>
             </View>
           </TouchableHighlight>
         ))}
@@ -52,7 +53,7 @@ class CustomTabBar extends React.Component {
   }
 }
 
-const CustomTabView = ({router, navigation}) => {
+const CustomTabView = ({router, navigation, team}) => {
   const { routes, index } = navigation.state
   const ActiveScreen = router.getComponentForState(navigation.state)
 
@@ -60,6 +61,7 @@ const CustomTabView = ({router, navigation}) => {
     <View style={styles.container}>
       <CustomTabBar navigation={navigation} />
       <ActiveScreen
+        teamInfo={team}
         navigation={addNavigationHelpers({
           ...navigation,
           state: routes[index],
@@ -69,7 +71,8 @@ const CustomTabView = ({router, navigation}) => {
 }
 CustomTabView.propTypes = {
   router: React.PropTypes.object.isRequired,
-  navigation: React.PropTypes.object.isRequired
+  navigation: React.PropTypes.object.isRequired,
+  team: React.PropTypes.func.isRequired,
 }
 
 const CustomTabRouter = TabRouter(

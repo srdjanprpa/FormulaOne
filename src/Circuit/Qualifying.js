@@ -3,13 +3,14 @@ import React from 'react'
 
 import {
   View,
-  Text,
   StyleSheet,
   ListView,
   ActivityIndicator,
   RefreshControl,
   Platform,
 } from 'react-native'
+
+import ScalableText from 'react-native-text'
 
 import StatsHeader from './StatsHeader'
 import api from '../Utils/api'
@@ -120,23 +121,23 @@ export default class QualifyingScreen extends React.Component {
 
     return (
       <View style={styles.driver}>
-        <Text style={styles.position}>{rowData.position}</Text>
+        <ScalableText style={styles.position}>{rowData.position}</ScalableText>
         <View style={styles.info}>
-          <Text style={styles.name}><Text style={styles.number}>{rowData.Driver.permanentNumber}</Text> {rowData.Driver.givenName} {rowData.Driver.familyName}</Text>
-          <Text style={styles.teamConstructor}>{rowData.Constructor.name}</Text>
+          <ScalableText style={styles.name}><ScalableText style={styles.number}>{rowData.Driver.permanentNumber}</ScalableText> {rowData.Driver.givenName} {rowData.Driver.familyName}</ScalableText>
+          <ScalableText style={styles.teamConstructor}>{rowData.Constructor.name}</ScalableText>
         </View>
         <View style={styles.status}>
           <View style={styles.statusBox}>
-            <Text style={styles.statusTxt}>Q1:</Text>
-            <Text style={styles.statusTime}>{rowData.Q1}</Text>
+            <ScalableText style={styles.statusTxt}>Q1:</ScalableText>
+            <ScalableText style={styles.statusTime}>{rowData.Q1}</ScalableText>
           </View>
           <View style={styles.statusBox}>
-            <Text style={styles.statusTxt}>Q2:</Text>
-            <Text style={[styles.statusTime, q2 === '- -' ? styles.textCenter : '']}>{q2}</Text>
+            <ScalableText style={styles.statusTxt}>Q2:</ScalableText>
+            <ScalableText style={[styles.statusTime, q2 === '- -' ? styles.textCenter : '']}>{q2}</ScalableText>
           </View>
           <View style={styles.statusBox}>
-            <Text style={styles.statusTxt}>Q3:</Text>
-            <Text style={[styles.statusTime, q3 === '- -' ? styles.textCenter : '']}>{q3}</Text>
+            <ScalableText style={styles.statusTxt}>Q3:</ScalableText>
+            <ScalableText style={[styles.statusTime, q3 === '- -' ? styles.textCenter : '']}>{q3}</ScalableText>
           </View>
         </View>
       </View>
@@ -169,7 +170,7 @@ const styles = StyleSheet.create({
     color: '#f94057',
     lineHeight: Platform.OS === 'ios' ? 50 : 36,
     marginRight: 10,
-    width: 30,
+    width: 20,
     height: 50,
   },
   info: {
@@ -193,7 +194,7 @@ const styles = StyleSheet.create({
     paddingTop: 5
   },
   status: {
-    width: 90,
+    width: 95,
   },
   statusBox: {
     flexDirection: 'row',
