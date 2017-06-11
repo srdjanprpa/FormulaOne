@@ -1,5 +1,6 @@
 /* @flow */
-import React from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 
 import {
   View,
@@ -7,7 +8,7 @@ import {
   ListView,
   ActivityIndicator,
   RefreshControl,
-  Platform,
+  Platform
 } from 'react-native'
 
 import ScalableText from 'react-native-text'
@@ -15,129 +16,145 @@ import ScalableText from 'react-native-text'
 import StatsHeader from './StatsHeader'
 import api from '../Utils/api'
 import ErrorPage from '../Components/ErrorPage'
+import ComingSoon from '../Components/ComingSoon'
+
+import moment from 'moment'
 
 const ds = new ListView.DataSource({
   rowHasChanged: (r1, r2) => r1 !== r2
 })
 
-export default class QualifyingScreen extends React.Component {
-  static propTypes = {
-    navigation: React.PropTypes.object.isRequired,
-    info: React.PropTypes.object.isRequired,
-  }
-
+class QualifyingScreen extends Component {
   constructor(props) {
     super(props)
+
     this.state = {
       isLoading: true,
       error: false,
       qualifyingResults: [],
-      refreshing: false
+      refreshing: false,
+      isComing: false
     }
+
+    // Bind internal functions, necessary in ES6 + React
+    this.renderRow = this.renderRow.bind(this)
   }
 
-  _getQualifyingResults() {
-    const detail = this.props.info
+  getQualifyingResults() {
+    const { season, round } = this.props
 
-    api.getQualifyingResults({season: detail.season, round: detail.round})
+    api.getQualifyingResults(season, round)
       .then((res) => {
-        this.setState({
-          isLoading: false,
-          refreshing: false,
-          error: false,
-          qualifyingResults: ds.cloneWithRows(res.MRData.RaceTable.Races[0].QualifyingResults)
-        })
+        if (res.errorMessage || res.message || res.err) {
+          this.setState({
+            isLoading: false,
+            refreshing: false,
+            error: false,
+            isComing: true
+          })
+        } else {
+          this.setState({
+            isLoading: false,
+            refreshing: false,
+            error: false,
+            isComing: false,
+            qualifyingResults: ds.cloneWithRows(res)
+          })
+        }
       })
       .catch(() => {
         this.setState({
           isLoading: false,
           refreshing: false,
           error: true,
+          isComing: false
         })
       })
   }
 
   componentWillMount() {
-    this._getQualifyingResults()
+    this.getQualifyingResults()
   }
 
   render() {
-    if (this.state.isLoading) {
+    const { routeName } = this.props.navigation.state
+    const { date, time } = this.props
+    const { isLoading, error, isComing, qualifyingResults } = this.state
+
+    if (isLoading) {
       return (
-        <View style={styles.container}>
-          <StatsHeader name={this.props.navigation.state.routeName} />
+        <View style={ styles.container }>
           <ActivityIndicator
-            animating={this.state.isLoading}
-            style={[styles.centering, {height: 80}]}
+            animating={ isLoading }
+            style={[
+              styles.centering,
+              { height: 80 }
+            ]}
             size="large" />
         </View>
       )
-    } else if (!this.state.isLoading && this.state.qualifyingResults.length === 0 && this.state.error) {
+    } else if (!isLoading && error) {
       return (
         <ErrorPage />
       )
-    } else {
+    } else if (!isLoading && isComing) {
+      const ciruitDate = moment(`${date} ${time}`).subtract(1, 'd')
+
       return (
-        <View style={styles.container}>
-          <StatsHeader name={this.props.navigation.state.routeName} />
+        <ComingSoon endDate={ ciruitDate }/>
+      )
+    } else if (!isLoading && !isComing) {
+      return (
+        <View style={ styles.container }>
+          <StatsHeader name={ routeName } />
           <ListView
-            style={styles.results}
-            refreshControl={this._refreshControl()}
-            dataSource={this.state.qualifyingResults}
-            renderRow={this.renderRow.bind(this)} />
+            style={ styles.results }
+            refreshControl={ this.refreshControl() }
+            dataSource={ qualifyingResults }
+            renderRow={ this.renderRow } />
         </View>
       )
     }
   }
 
-  _refreshControl() {
+  refreshControl() {
     return (
       <RefreshControl
-        refreshing={this.state.refreshing}
-        onRefresh={()=>this._refreshListView()} />
+        refreshing={ this.state.refreshing }
+        onRefresh={ () => this.refreshListView() } />
     )
   }
 
-  _refreshListView() {
-    this.setState({refreshing: true})
-    this._getQualifyingResults()
+  refreshListView() {
+    this.setState({ refreshing: true })
+    this.getQualifyingResults()
   }
 
   renderRow(rowData) {
-    let q2
-    let q3
-
-    if (rowData.Q2) {
-      q2 = rowData.Q2
-    } else {
-      q2 = '- -'
-    }
-
-    if (rowData.Q3) {
-      q3 = rowData.Q3
-    } else {
-      q3 = '- -'
-    }
 
     return (
-      <View style={styles.driver}>
-        <ScalableText style={styles.position}>{rowData.position}</ScalableText>
-        <View style={styles.info}>
-          <ScalableText style={styles.name}><ScalableText style={styles.number}>{rowData.Driver.permanentNumber}</ScalableText> {rowData.Driver.givenName} {rowData.Driver.familyName}</ScalableText>
-          <ScalableText style={styles.teamConstructor}>{rowData.Constructor.name}</ScalableText>
+      <View style={ styles.driver }>
+        <ScalableText style={ styles.position }>{ rowData.position }</ScalableText>
+        <View style={ styles.info }>
+          <ScalableText style={ styles.name }><ScalableText style={ styles.number }>{ rowData.Driver.permanentNumber }</ScalableText> { rowData.Driver.givenName } { rowData.Driver.familyName }</ScalableText>
+          <ScalableText style={ styles.teamConstructor }>{ rowData.Constructor.name }</ScalableText>
         </View>
-        <View style={styles.status}>
-          <View style={styles.statusBox}>
-            <ScalableText style={styles.statusTxt}>Q1:</ScalableText>
-            <ScalableText style={styles.statusTime}>{rowData.Q1}</ScalableText>
+        <View style={ styles.status }>
+          <View style={ styles.statusBox }>
+            <ScalableText style={ styles.statusTxt }>Q1:</ScalableText>
+            <ScalableText style={ styles.statusTime }>{ rowData.Q1 }</ScalableText>
           </View>
-          <View style={styles.statusBox}>
-            <ScalableText style={styles.statusTxt}>Q2:</ScalableText>
-            <ScalableText style={[styles.statusTime, q2 === '- -' ? styles.textCenter : '']}>{q2}</ScalableText>
+          <View style={ styles.statusBox }>
+            <ScalableText style={ styles.statusTxt}>Q2:</ScalableText>
+            <ScalableText style={[ styles.statusTime, rowData.Q2 ? '' : styles.textCenter ]}>
+              { rowData.Q2 ? rowData.Q2 : '- -' }
+            </ScalableText>
           </View>
-          <View style={styles.statusBox}>
-            <ScalableText style={styles.statusTxt}>Q3:</ScalableText>
-            <ScalableText style={[styles.statusTime, q3 === '- -' ? styles.textCenter : '']}>{q3}</ScalableText>
+          <View style={ styles.statusBox }>
+            <ScalableText style={ styles.statusTxt }>Q3:</ScalableText>
+            <ScalableText style={[ styles.statusTime, rowData.Q3 ? '' : styles.textCenter ]}>
+              { rowData.Q3 ? rowData.Q3 : '- -' }
+            </ScalableText>
           </View>
         </View>
       </View>
@@ -147,6 +164,7 @@ export default class QualifyingScreen extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: '#fff',
     flex: 1
   },
   centering: {
@@ -170,12 +188,11 @@ const styles = StyleSheet.create({
     color: '#f94057',
     lineHeight: Platform.OS === 'ios' ? 50 : 36,
     marginRight: 10,
-    width: 20,
-    height: 50,
+    width: 20
   },
   info: {
     flex: 1,
-    paddingTop: 10,
+    paddingTop: 10
   },
   number: {
     color: '#f94057'
@@ -194,23 +211,33 @@ const styles = StyleSheet.create({
     paddingTop: 5
   },
   status: {
-    width: 95,
+    width: 95
   },
   statusBox: {
-    flexDirection: 'row',
+    flexDirection: 'row'
   },
   statusTxt: {
     width: 27,
     fontFamily: 'Raleway-Medium',
-    color: '#f94057',
+    color: '#f94057'
   },
   statusTime: {
     flex: 1,
     textAlign: 'right',
     fontFamily: 'Raleway-SemiBold',
-    color: '#444',
+    color: '#444'
   },
   textCenter: {
-    textAlign: 'center',
+    textAlign: 'center'
   }
 })
+
+QualifyingScreen.propTypes = {
+  navigation: PropTypes.object.isRequired,
+  season: PropTypes.string.isRequired,
+  round: PropTypes.string.isRequired,
+  date: PropTypes.string,
+  time: PropTypes.string
+}
+
+module.exports = QualifyingScreen

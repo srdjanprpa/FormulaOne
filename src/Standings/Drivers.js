@@ -1,7 +1,6 @@
 /* @flow */
-/* eslint no-undef: "error" */
-/* eslint-env node */
-import React from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 
 import {
   View,
@@ -11,7 +10,7 @@ import {
   AsyncStorage,
   RefreshControl,
   Platform,
-  Image,
+  Image
 } from 'react-native'
 
 import ScalableText from 'react-native-text'
@@ -25,26 +24,26 @@ const ds = new ListView.DataSource({
   rowHasChanged: (r1, r2) => r1 !== r2
 })
 
-export default class DriversScreen extends React.Component {
-  static propTypes = {
-    navigation: React.PropTypes.object.isRequired,
-  }
-
+class DriversScreen extends Component {
   constructor(props) {
     super(props)
+
     this.state = {
       isLoading: true,
       error: false,
       drivers: [],
       refreshing: false
     }
+
+    // Bind internal functions, necessary in ES6 + React
+    this.renderRow = this.renderRow.bind(this)
   }
 
-  _getDrivers() {
+  getDrivers() {
     api.getDriverStandings()
       .then((driversStandings) => {
         const drivers = {
-          standings: driversStandings.MRData.StandingsTable.StandingsLists[0].DriverStandings,
+          standings: driversStandings,
           expireTime: moment().add(1, 'h').unix()
         }
 
@@ -71,12 +70,15 @@ export default class DriversScreen extends React.Component {
     AsyncStorage.getItem('driversStandings')
       .then((value) => {
         if (!value) {
-          this._getDrivers()
+          this.getDrivers()
+
           return
         }
+
         const drivers = JSON.parse(value)
+
         if (moment().unix() > drivers.expireTime) {
-          this._getDrivers()
+          this.getDrivers()
         } else {
           this.setState({
             isLoading: false,
@@ -85,75 +87,78 @@ export default class DriversScreen extends React.Component {
         }
       })
       .catch(() => {
-        this._getDrivers()
+        this.getDrivers()
       })
   }
 
   render() {
-    if (this.state.isLoading) {
+    const { routeName } = this.props.navigation.state
+    const { isLoading, drivers, error } = this.state
+
+    if (isLoading) {
       return (
-        <View style={styles.container}>
-          <StatsHeader name={this.props.navigation.state.routeName} />
+        <View style={ styles.container }>
+          <StatsHeader name={ routeName } />
           <ActivityIndicator
-            animating={this.state.isLoading}
-            style={[styles.centering, {height: 80}]}
+            animating={ isLoading }
+            style={[ styles.centering, {height: 80} ]}
             size="large" />
         </View>
       )
-    } else if (!this.state.isLoading && this.state.drivers.length === 0 && this.state.error) {
+    } else if (!isLoading && drivers.length === 0 && error) {
       return (
         <ErrorPage />
       )
     } else {
       return (
-        <View style={styles.container}>
-          <StatsHeader name={this.props.navigation.state.routeName} />
-          { this.state.drivers && this.state.drivers._cachedRowCount > 0 && this.state.error ?
-            <View style={styles.errMsg}><ScalableText style={styles.errMsgTxt}>Unable to load new data!</ScalableText></View> :
+        <View style={ styles.container }>
+          <StatsHeader name={ routeName } />
+          { drivers && drivers._cachedRowCount > 0 && error ?
+            <View style={ styles.errMsg }><ScalableText style={ styles.errMsgTxt }>Unable to load new data!</ScalableText></View> :
             <View></View>
           }
           <ListView
-            style={styles.drivers}
-            refreshControl={this._refreshControl()}
-            dataSource={this.state.drivers}
-            renderRow={this.renderRow.bind(this)} />
+            style={ styles.drivers }
+            refreshControl={ this.refreshControl() }
+            dataSource={ drivers }
+            renderRow={ this.renderRow } />
         </View>
       )
     }
   }
 
-  _refreshControl() {
+  refreshControl() {
     return (
       <RefreshControl
-        refreshing={this.state.refreshing}
-        onRefresh={()=>this._refreshListView()} />
+        refreshing={ this.state.refreshing }
+        onRefresh={ () => this.refreshListView() } />
     )
   }
 
-  _refreshListView() {
-    this.setState({refreshing: true})
-    this._getDrivers()
+  refreshListView() {
+    this.setState({ refreshing: true })
+    this.getDrivers()
   }
 
   renderRow(rowData) {
     return (
-      <View style={styles.driver}>
-        <View style={styles.avatarBox}>
-          <Image style={styles.avatar}
-                 source={{uri: `https://s3-eu-west-1.amazonaws.com/f1-storage/Drivers/${rowData.Driver.code}.jpg`}}/>
-          <ScalableText style={styles.avatarTxt}>{rowData.position}</ScalableText>
+      <View style={ styles.driver }>
+        <ScalableText style={ styles.avatarTxt }>{ rowData.position }</ScalableText>
+        <View style={ styles.avatarBox }>
+          <Image style={ styles.avatar }
+                 source={{ uri: `https://s3-eu-west-1.amazonaws.com/f1-storage/Drivers/${rowData.Driver.code}.jpg` }}/>
         </View>
-        <View style={styles.info}>
-          <ScalableText style={styles.name}>
-            <ScalableText style={styles.number}>{rowData.Driver.permanentNumber}</ScalableText> {rowData.Driver.givenName} {rowData.Driver.familyName}
+        <View style={ styles.info }>
+          <ScalableText style={ styles.name }>
+            <ScalableText style={ styles.number }>{ rowData.Driver.permanentNumber }</ScalableText> { rowData.Driver.givenName } { rowData.Driver.familyName }
           </ScalableText>
-          <ScalableText style={styles.teamConstructor}>{rowData.Constructors[0].name}</ScalableText>
+          <ScalableText style={ styles.teamConstructor }>{ rowData.Constructors[0].name }</ScalableText>
         </View>
-        <View style={styles.winsBox}><ScalableText style={styles.wins}>{rowData.wins}</ScalableText></View>
-        <View style={styles.pointsBox}>
-          <ScalableText style={styles.points}>{rowData.points}</ScalableText>
-            <Image style={styles.flag}
-                   source={{uri: `https://s3-eu-west-1.amazonaws.com/f1-storage/Flags/${rowData.Driver.nationality}.png`}}/>
+        <View style={ styles.winsBox }><ScalableText style={ styles.wins }>{ rowData.wins }</ScalableText></View>
+        <View style={ styles.pointsBox }>
+          <ScalableText style={ styles.points }>{ rowData.points }</ScalableText>
+          <Image style={ styles.flag }
+                 source={{ uri: `https://s3-eu-west-1.amazonaws.com/f1-storage/Flags/${rowData.Driver.nationality}.png` }}/>
         </View>
       </View>
     )
@@ -174,12 +179,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#f94057',
     alignItems: 'center',
     justifyContent: 'center',
-    height: 16,
+    height: 16
   },
   errMsgTxt: {
     fontSize: 10,
     fontFamily: 'Raleway-Medium',
-    color: '#fff',
+    color: '#fff'
   },
   drivers: {
     flex: 1
@@ -201,7 +206,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
     position: 'relative',
     zIndex: 10,
-    top: 3,
+    top: 3
   },
   avatar: {
     position: 'relative',
@@ -212,18 +217,18 @@ const styles = StyleSheet.create({
     height: 35
   },
   avatarTxt: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    zIndex: -1,
+    position: 'relative',
+    // top: 0,
+    // left: 0,
+    // zIndex: -1,
     fontFamily: 'Raleway-Medium',
     fontSize: 16,
     textAlign: 'center',
     justifyContent: 'center',
     color: '#f94057',
     lineHeight: Platform.OS === 'ios' ? 40 : 30,
-    width: 30,
-    height: 40,
+    width: 25,
+    height: 40
   },
   info: {
     flex: 1
@@ -265,12 +270,18 @@ const styles = StyleSheet.create({
     fontFamily: 'Raleway-SemiBold',
     textAlign: 'right',
     fontSize: 16,
-    lineHeight: 20
+    lineHeight: 16
   },
   flag: {
     height: 11,
     width: 16,
-    marginTop: 3,
+    marginTop: 8,
     alignItems: 'flex-end'
   }
 })
+
+DriversScreen.propTypes = {
+  navigation: PropTypes.object.isRequired
+}
+
+module.exports = DriversScreen

@@ -1,7 +1,5 @@
 /* @flow */
-/* eslint no-undef: "error" */
-/* eslint-env node */
-import React from 'react'
+import React, { Component } from 'react'
 
 import {
   StyleSheet,
@@ -11,9 +9,10 @@ import {
 
 import ScalableText from 'react-native-text'
 
-export default class ErrorPage extends React.Component {
+class ErrorPage extends Component {
   constructor(props) {
     super(props)
+
     this.state = {
       isConnected: true
     }
@@ -21,11 +20,11 @@ export default class ErrorPage extends React.Component {
 
   render() {
     return (
-      <View style={styles.container}>
-        <ScalableText style={styles.txt}>Box! Box! Box!</ScalableText>
-        <ScalableText style={styles.txt}>Our pit crew changes something.</ScalableText>
-        <Image style={styles.pitStop}
-               source={require('../../assets/images/pit-stop.jpg')} />
+      <View style={ styles.container }>
+        <ScalableText style={ styles.txt }>Box! Box! Box!</ScalableText>
+        <ScalableText style={ styles.txt }>Our pit crew changes something.</ScalableText>
+        <Image style={ styles.pitStop }
+               source={ require('../../assets/images/pit-stop.jpg') } />
       </View>
     )
   }
@@ -53,3 +52,5 @@ const styles = StyleSheet.create({
     flex: 1
   }
 })
+
+module.exports = ErrorPage

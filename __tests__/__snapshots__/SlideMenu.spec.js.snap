@@ -1,0 +1,164 @@
+exports[`<SlideMenu /> renders correctly 1`] = `
+<View
+  style={
+    Object {
+      "backgroundColor": "#202930",
+      "flex": 1,
+      "paddingTop": 20,
+    }
+  }>
+  <Image
+    source={1}
+    style={
+      Object {
+        "height": 150,
+        "position": "relative",
+        "width": null,
+      }
+    } />
+  <View
+    accessibilityComponentType={undefined}
+    accessibilityLabel={undefined}
+    accessibilityTraits={undefined}
+    accessible={true}
+    hasTVPreferredFocus={undefined}
+    hitSlop={undefined}
+    isTVSelectable={true}
+    onLayout={undefined}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      Array [
+        Object {
+          "backgroundColor": "transparent",
+        },
+        Array [
+          Object {
+            "borderBottomWidth": 1,
+            "borderColor": "#2a3540",
+            "paddingHorizontal": 20,
+            "paddingVertical": 20,
+          },
+          Object {},
+        ],
+      ]
+    }
+    testID={undefined}
+    tvParallaxProperties={undefined}>
+    <View
+      style={
+        Object {
+          "flexDirection": "row",
+        }
+      }>
+      <Image
+        source={1}
+        style={
+          Object {
+            "height": 16,
+            "width": 16,
+          }
+        } />
+      <Text
+        accessible={true}
+        allowFontScaling={true}
+        ellipsizeMode="tail"
+        style={
+          Array [
+            Array [
+              Object {
+                "color": "#fff",
+                "fontFamily": "Raleway-Regular",
+                "fontSize": 16,
+                "lineHeight": 17,
+                "paddingLeft": 20,
+              },
+              Object {},
+            ],
+            Object {
+              "fontSize": 32,
+            },
+          ]
+        }>
+        STANDINGS
+      </Text>
+    </View>
+  </View>
+  <View
+    accessibilityComponentType={undefined}
+    accessibilityLabel={undefined}
+    accessibilityTraits={undefined}
+    accessible={true}
+    hasTVPreferredFocus={undefined}
+    hitSlop={undefined}
+    isTVSelectable={true}
+    onLayout={undefined}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      Array [
+        Object {
+          "backgroundColor": "transparent",
+        },
+        Array [
+          Object {
+            "borderBottomWidth": 1,
+            "borderColor": "#2a3540",
+            "paddingHorizontal": 20,
+            "paddingVertical": 20,
+          },
+          Object {},
+        ],
+      ]
+    }
+    testID={undefined}
+    tvParallaxProperties={undefined}>
+    <View
+      style={
+        Object {
+          "flexDirection": "row",
+        }
+      }>
+      <Image
+        source={1}
+        style={
+          Object {
+            "height": 16,
+            "width": 16,
+          }
+        } />
+      <Text
+        accessible={true}
+        allowFontScaling={true}
+        ellipsizeMode="tail"
+        style={
+          Array [
+            Array [
+              Object {
+                "color": "#fff",
+                "fontFamily": "Raleway-Regular",
+                "fontSize": 16,
+                "lineHeight": 17,
+                "paddingLeft": 20,
+              },
+              Object {},
+            ],
+            Object {
+              "fontSize": 32,
+            },
+          ]
+        }>
+        CALENDAR
+      </Text>
+    </View>
+  </View>
+</View>
+`;

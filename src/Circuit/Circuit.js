@@ -1,7 +1,6 @@
 /* @flow */
-/* eslint no-undef: "error" */
-/* eslint-env node */
-import React from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 
 import {
   View,
@@ -9,6 +8,7 @@ import {
   StyleSheet,
   TouchableHighlight,
   Platform,
+  StatusBar
 } from 'react-native'
 
 import Dimensions from 'Dimensions'
@@ -18,41 +18,42 @@ import CircuitContent from './CircuitContent'
 
 const { width } = Dimensions.get('window')
 
-export default class CircuitScreen extends React.Component {
-  static propTypes = {
-    navigation: React.PropTypes.object.isRequired
-  }
-
+class CircuitScreen extends Component {
   constructor(props) {
     super(props)
   }
 
   render() {
-    const circuitName = this.props.navigation.state.params.detail.Circuit.circuitName
-    const locality = this.props.navigation.state.params.detail.Circuit.Location.locality
-    const country = this.props.navigation.state.params.detail.Circuit.Location.country
-    const round = this.props.navigation.state.params.detail.round
-    const season = this.props.navigation.state.params.detail.season
+    const { navigation } = this.props
+    const { round, season, date, time, Circuit: { circuitName, locality, country, circuitId } } = this.props.navigation.state.params.details
 
     return (
-      <View style={styles.container}>
+      <View style={ styles.container }>
+        <StatusBar
+          barStyle="light-content"
+          backgroundColor={'transparent'}
+          translucent={true} />
         <Image
           style={styles.bgImg}
-          source={require('../../assets/images/circuit.jpg')}>
-        </Image>
-        <View style={styles.content}>
-          <View style={styles.headerTitle}>
-            <ScalableText style={styles.headerTxt}>{circuitName}</ScalableText>
-            <ScalableText style={styles.subHeaderTxt}>{locality} {country} ( Round: {round} - {season} )</ScalableText>
+          source={require('../../assets/images/circuit.jpg')} />
+        <View style={ styles.content }>
+          <View style={ styles.headerTitle }>
+            <ScalableText style={ styles.headerTxt }>{ circuitName }</ScalableText>
+            <ScalableText style={ styles.subHeaderTxt }>{ locality } { country } ( Round: { round } - { season } )</ScalableText>
           </View>
           <TouchableHighlight
-            style={styles.btn}
-            onPress={() => this.props.navigation.goBack()}>
+            style={ styles.btn }
+            onPress={ () => navigation.goBack() }>
             <Image
-              style={styles.btnLeft}
-              source={require('../../assets/images/btn-back.png')} />
+              style={ styles.btnLeft }
+              source={ require('../../assets/images/btn-back.png') } />
           </TouchableHighlight>
-          <CircuitContent info={this.props.navigation.state.params.detail}/>
+          <CircuitContent
+            season={ season }
+            round={ round }
+            circuitId={ circuitId }
+            date={ date }
+            time={ time }/>
         </View>
       </View>
     )
@@ -61,45 +62,45 @@ export default class CircuitScreen extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#fff',
-    flex: 1,
+    backgroundColor: '#202930',
+    flex: 1
   },
   bgImg: {
     flexDirection: 'row',
     position: 'absolute',
     width: width,
     height: 150,
-    backgroundColor: 'transparent',
+    backgroundColor: 'transparent'
   },
   content: {
-    paddingTop: Platform.OS === 'ios' ? 20 : 0,
+    paddingTop: Platform.OS === 'ios' ? 20 : 24,
     backgroundColor: 'transparent',
-    flex: 1,
+    flex: 1
   },
   btn: {
     height: 60,
     width: 60,
     marginBottom: Platform.OS === 'ios' ? 17 : 20,
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   btnLeft: {
     height: 40,
-    width: 40,
+    width: 40
   },
   headerTitle: {
     top: Platform.OS === 'ios' ? 40 : 35,
     alignItems: 'center',
     justifyContent: 'center',
     position: 'absolute',
-    width: width,
+    width: width
   },
   headerTxt: {
     color: '#fff',
     fontSize: 18,
     fontFamily: 'Raleway-SemiBold',
     flexDirection: 'row',
-    textAlign: 'center',
+    textAlign: 'center'
   },
   subHeaderTxt: {
     color: '#fff',
@@ -107,6 +108,12 @@ const styles = StyleSheet.create({
     marginTop: 2,
     fontFamily: 'Raleway-Medium',
     flexDirection: 'row',
-    textAlign: 'center',
+    textAlign: 'center'
   }
 })
+
+CircuitScreen.propTypes = {
+  navigation: PropTypes.object.isRequired
+}
+
+module.exports = CircuitScreen

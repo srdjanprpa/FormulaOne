@@ -1,7 +1,10 @@
 {
   "parser": "babel-eslint",
   "env": {
-    "browser": true
+    "browser": true,
+    "es6": true,
+    "node": true,
+    "jest": true
   },
   "plugins": [
     "react"
@@ -22,6 +25,11 @@
     "key-spacing": ["error", { "mode": "strict" }],
     "indent": ["error", 2],
     "curly": "error",
-    "no-unused-vars": ["error", { "varsIgnorePattern": "colors" }]
+    "no-unused-vars": ["error", { "varsIgnorePattern": "colors" }],
+    "comma-dangle": ["error", {
+        "arrays": "never",
+        "objects": "never"
+    }],
+    "newline-before-return": "error"
   }
 }

@@ -1,13 +1,11 @@
 import React from 'react'
-import HomeHeader from '../src/Components/HomeHeader'
+import ErrorPage from '../src/Components/ErrorPage'
 import renderer from 'react-test-renderer'
 
-describe('<HomeHeader />', () => {
+describe('<ErrorPage />', () => {
   it('renders correctly', () => {
     const component = renderer.create(
-      <HomeHeader
-        title="Formula One"
-        navigation={{}} />
+      <ErrorPage />
     ).toJSON()
 
     expect(component).toMatchSnapshot()

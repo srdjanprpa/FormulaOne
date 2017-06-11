@@ -2,7 +2,7 @@
 #
 .DS_Store
 __design/
-build.prod.gradle
+build.gradle
 
 # Xcode
 #

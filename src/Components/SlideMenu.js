@@ -1,22 +1,18 @@
 /* @flow */
-/* eslint no-undef: "error" */
-/* eslint-env node */
-import React from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 
 import {
   View,
   StyleSheet,
   Image,
-  TouchableHighlight
+  TouchableHighlight,
+  Platform
 } from 'react-native'
 
 import ScalableText from 'react-native-text'
 
-export default class SlideMenu extends React.Component {
-  static propTypes = {
-    navigation: React.PropTypes.object.isRequired
-  }
-
+class SlideMenu extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -27,28 +23,28 @@ export default class SlideMenu extends React.Component {
   render() {
     function icon(index) {
       if (index == 0) {
-        return <Image source={require('../../assets/images/icon-standings.png')} style={styles.btnIcon} />
+        return <Image source={ require('../../assets/images/icon-standings.png') } style={ styles.btnIcon } />
       } else if (index == 1) {
-        return <Image source={require('../../assets/images/icon-calendar.png')} style={styles.btnIcon} />
+        return <Image source={ require('../../assets/images/icon-calendar.png') } style={ styles.btnIcon } />
       }
     }
 
     return (
-      <View style={styles.content}>
+      <View style={ styles.content }>
         <Image
-          style={styles.menuImg}
-          source={require('../../assets/images/menu-img.jpg')}/>
+          style={ styles.menuImg }
+          source={ require('../../assets/images/menu-img.jpg') }/>
         {this.props.navigation.state.routes.map((route, index) => (
           <TouchableHighlight
-            onPress={() => this.props.navigation.navigate(route.routeName)}
-            onHideUnderlay={()=>{this.setState({pressed: ''})}}
-            onShowUnderlay={()=>{this.setState({pressed: route.routeName})}}
-            style={[styles.btn, this.state.pressed === route.routeName ? styles.tabPress : {}]}
-            key={route.routeName}>
-            <View style={styles.btnBox}>
-              {icon(index)}
-              <ScalableText style={[styles.btnTxt, this.props.navigation.state.index === index ? styles.btnTxtActive : {}]}>
-                {route.routeName.toUpperCase()}
+            onPress={ () => this.props.navigation.navigate(route.routeName) }
+            onHideUnderlay={ () => { this.setState({ pressed: '' }) } }
+            onShowUnderlay={ () => { this.setState({ pressed: route.routeName }) } }
+            style={[ styles.btn, this.state.pressed === route.routeName ? styles.tabPress : {} ]}
+            key={ route.routeName }>
+            <View style={ styles.btnBox }>
+              { icon(index) }
+              <ScalableText style={[ styles.btnTxt, this.props.navigation.state.index === index ? styles.btnTxtActive : {} ]}>
+                { route.routeName.toUpperCase() }
               </ScalableText>
             </View>
           </TouchableHighlight>
@@ -62,6 +58,7 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     backgroundColor: '#202930',
+    paddingTop: Platform.OS === 'ios' ? 20 : 0
   },
   menuImg: {
     position: 'relative',
@@ -79,7 +76,7 @@ const styles = StyleSheet.create({
   },
   btnIcon: {
     height: 16,
-    width: 16,
+    width: 16
   },
   btnTxt: {
     paddingLeft: 20,
@@ -92,3 +89,9 @@ const styles = StyleSheet.create({
     color: '#f94057'
   }
 })
+
+SlideMenu.propTypes = {
+  navigation: PropTypes.object.isRequired
+}
+
+module.exports = SlideMenu

@@ -1,7 +1,6 @@
 /* @flow */
-/* eslint no-undef: "error" */
-/* eslint-env node */
-import React from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 
 import {
   View,
@@ -13,7 +12,7 @@ import {
   ActivityIndicator,
   RefreshControl,
   Platform,
-  TouchableOpacity,
+  TouchableOpacity
 } from 'react-native'
 
 import ScalableText from 'react-native-text'
@@ -27,11 +26,7 @@ const ds = new ListView.DataSource({
   rowHasChanged: (r1, r2) => r1 !== r2
 })
 
-export default class CalendarScreen extends React.Component {
-  static propTypes = {
-    navigation: React.PropTypes.object.isRequired,
-  }
-
+class CalendarScreen extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -40,19 +35,16 @@ export default class CalendarScreen extends React.Component {
       calendar: [],
       refreshing: false
     }
+
+    // Bind internal functions, necessary in ES6 + React
+    this.renderRow = this.renderRow.bind(this)
   }
 
-  static navigationOptions = {
-    drawer: () => ({
-      label: 'Calendar',
-    }),
-  }
-
-  _getCurrentCalendar() {
+  getCurrentCalendar() {
     api.getCurrentCalendar(moment().format('YYYY'))
       .then((races) => {
         const calendar = {
-          raceTable: races.MRData.RaceTable.Races,
+          raceTable: races,
           expireTime: moment().add(1, 'd').unix()
         }
 
@@ -70,7 +62,7 @@ export default class CalendarScreen extends React.Component {
         this.setState({
           isLoading: false,
           refreshing: false,
-          error: true,
+          error: true
         })
       })
   }
@@ -79,12 +71,15 @@ export default class CalendarScreen extends React.Component {
     AsyncStorage.getItem('calendar')
       .then((value) => {
         if (!value) {
-          this._getCurrentCalendar()
+          this.getCurrentCalendar()
+
           return
         }
+
         const calendar = JSON.parse(value)
+
         if (moment().unix() > calendar.expireTime) {
-          this._getCurrentCalendar()
+          this.getCurrentCalendar()
         } else {
           this.setState({
             isLoading: false,
@@ -93,46 +88,48 @@ export default class CalendarScreen extends React.Component {
         }
       })
       .catch(() => {
-        this._getCurrentCalendar()
+        this.getCurrentCalendar()
       })
   }
 
   render() {
+    const { isLoading, calendar, error } = this.state
+
     const CalendarContent = () => {
-      if (this.state.isLoading) {
+      if (isLoading) {
         return (
           <ActivityIndicator
-            animating={this.state.isLoading}
-            style={[styles.centering, {height: 80}]}
+            animating={ isLoading }
+            style={[ styles.centering, {height: 80} ]}
             size="large" />
         )
-      } else if (!this.state.isLoading && this.state.calendar.length === 0 && this.state.error) {
+      } else if (!isLoading && calendar.length === 0 && error) {
         return ( <ErrorPage /> )
       } else {
         return (
-          <View style={styles.container}>
-            { this.state.calendar && this.state.calendar._cachedRowCount > 0 && this.state.error ?
-              <View style={styles.errMsg}><ScalableText style={styles.errMsgTxt}>Unable to load new data!</ScalableText></View> :
+          <View style={ styles.container }>
+            { calendar && calendar._cachedRowCount > 0 && error ?
+              <View style={ styles.errMsg }><ScalableText style={ styles.errMsgTxt }>Unable to load new data!</ScalableText></View> :
               <View></View>
             }
             <ListView
-              style={styles.calendar}
-              refreshControl={this._refreshControl()}
-              dataSource={this.state.calendar}
-              renderRow={this.renderRow.bind(this)} />
+              style={ styles.calendar }
+              refreshControl={ this._refreshControl() }
+              dataSource={ calendar }
+              renderRow={ this.renderRow } />
           </View>
         )
       }
     }
 
     return (
-      <View style={styles.container}>
+      <View style={ styles.container }>
         <StatusBar
           barStyle="light-content"
           backgroundColor={'#202930'} />
         <HomeHeader
           title="F1 Info"
-          navigation={this.props.navigation} />
+          navigation={ this.props.navigation } />
         <CalendarContent />
       </View>
     )
@@ -142,16 +139,18 @@ export default class CalendarScreen extends React.Component {
     const time = `${rowData.date}T${rowData.time}`
 
     const content = (
-      <TouchableOpacity style={styles.row} onPress={() => console.log(this.props.navigation.navigate('CircuitScreen', {detail: rowData}))}>
-        <View style={styles.dateContainer}>
-          <ScalableText style={styles.dateText}>{moment(time).tz('Europe/Belgrade').format('MMM DD')}</ScalableText>
-          <ScalableText style={styles.dateText}>{moment(time).tz('Europe/Belgrade').format('HH:mm')}</ScalableText>
+      <TouchableOpacity
+        style={ styles.row }
+        onPress={ () => this.props.navigation.navigate('CircuitScreen', { details: rowData }) }>
+        <View style={ styles.dateContainer }>
+          <ScalableText style={ styles.dateText }>{ moment(time).tz('Europe/Belgrade').format('MMM DD') }</ScalableText>
+          <ScalableText style={ styles.dateText }>{ moment(time).tz('Europe/Belgrade').format('HH:mm') }</ScalableText>
         </View>
-        <View style={styles.details}>
-          <View style={styles.circle}></View>
-          <View style={styles.raceContent}>
-            <ScalableText style={styles.raceName}>{rowData.raceName}</ScalableText>
-            <ScalableText style={styles.raceLocation}>{rowData.Circuit.Location.locality}</ScalableText>
+        <View style={ styles.details }>
+          <View style={ styles.circle }></View>
+          <View style={ styles.raceContent }>
+            <ScalableText style={ styles.raceName }>{ rowData.raceName }</ScalableText>
+            <ScalableText style={ styles.raceLocation }>{ rowData.Circuit.Location.locality }</ScalableText>
           </View>
         </View>
       </TouchableOpacity>
@@ -161,9 +160,9 @@ export default class CalendarScreen extends React.Component {
       return (
         <View>
           <Image
-            style={styles.footerImg}
-            source={require('../../assets/images/calendar-footer.jpg')}>
-            <View style={styles.footerContent}>
+            style={ styles.footerImg }
+            source={ require('../../assets/images/calendar-footer.jpg') }>
+            <View style={ styles.footerContent }>
               { content }
             </View>
           </Image>
@@ -181,37 +180,37 @@ export default class CalendarScreen extends React.Component {
   _refreshControl() {
     return (
       <RefreshControl
-        refreshing={this.state.refreshing}
-        onRefresh={()=>this._refreshListView()} />
+        refreshing={ this.state.refreshing }
+        onRefresh={ () => this.refreshListView() } />
     )
   }
 
-  _refreshListView() {
+  refreshListView() {
     //Start Rendering Spinner
-    this.setState({refreshing: true})
-    this._getCurrentCalendar()
+    this.setState({ refreshing: true })
+    this.getCurrentCalendar()
   }
 }
 
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#fff',
-    flex: 1,
+    flex: 1
   },
   calendar: {
-    flex: 1,
+    flex: 1
   },
   errMsg: {
     flexDirection: 'row',
     backgroundColor: '#f94057',
     alignItems: 'center',
     justifyContent: 'center',
-    height: 16,
+    height: 16
   },
   errMsgTxt: {
     fontSize: 10,
     fontFamily: 'Raleway-Medium',
-    color: '#fff',
+    color: '#fff'
   },
   row: {
     flexDirection: 'row',
@@ -219,17 +218,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 15,
-    height: 50,
+    height: 50
   },
   dateContainer: {
-    width: 60,
+    width: 60
   },
   dateText: {
     fontFamily: 'Raleway-Medium',
     fontSize: 12,
     lineHeight: 16,
     color: '#f94057',
-    textAlign: 'right',
+    textAlign: 'right'
   },
   details: {
     borderColor: '#f94057',
@@ -237,7 +236,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     flex: 1,
     marginLeft: 20,
-    paddingLeft: 20,
+    paddingLeft: 20
   },
   circle: {
     opacity: Platform.OS === 'ios' ? 1 : 0,
@@ -249,30 +248,31 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     position: 'absolute',
     left: -6,
-    top: 14,
+    top: 14
   },
   raceContent: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
   raceName: {
     fontFamily: 'Raleway-SemiBold',
     fontSize: 16,
     lineHeight: 20,
-    color: '#444',
+    color: '#444'
   },
   raceLocation: {
     fontFamily: 'Raleway-Medium',
     fontSize: 12,
     lineHeight: 12,
-    color: '#819cad',
+    paddingBottom: 3,
+    color: '#819cad'
   },
   footerContent: {
     flexDirection: 'row',
     position: 'relative',
     top: 0,
     flex: 1,
-    left: 0,
+    left: 0
   },
   footerImg: {
     flex: 1,
@@ -280,6 +280,12 @@ const styles = StyleSheet.create({
     height: 300,
     backgroundColor: 'transparent',
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'center'
   }
 })
+
+CalendarScreen.propTypes = {
+  navigation: PropTypes.object.isRequired
+}
+
+module.exports = CalendarScreen

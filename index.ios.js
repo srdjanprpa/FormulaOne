@@ -5,7 +5,7 @@
  */
 
 import {
-  AppRegistry,
+  AppRegistry
 } from 'react-native'
 
 import app from './src/app'

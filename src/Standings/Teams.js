@@ -1,5 +1,6 @@
 /* @flow */
-import React from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 
 import {
   View,
@@ -8,7 +9,7 @@ import {
   ActivityIndicator,
   AsyncStorage,
   RefreshControl,
-  TouchableOpacity,
+  TouchableOpacity
 } from 'react-native'
 
 import ScalableText from 'react-native-text'
@@ -22,12 +23,7 @@ const ds = new ListView.DataSource({
   rowHasChanged: (r1, r2) => r1 !== r2
 })
 
-export default class TeamsScreen extends React.Component {
-  static propTypes = {
-    navigation: React.PropTypes.object.isRequired,
-    teamInfo: React.PropTypes.func.isRequired,
-  }
-
+class TeamsScreen extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -38,11 +34,11 @@ export default class TeamsScreen extends React.Component {
     }
   }
 
-  _getTeams() {
+  getTeams() {
     api.getConstructorStandings()
       .then((teamsStandings) => {
         const teams = {
-          standings: teamsStandings.MRData.StandingsTable.StandingsLists[0].ConstructorStandings,
+          standings: teamsStandings,
           expireTime: moment().add(1, 'h').unix()
         }
 
@@ -69,12 +65,15 @@ export default class TeamsScreen extends React.Component {
     AsyncStorage.getItem('teamsStandings')
       .then((value) => {
         if (!value) {
-          this._getTeams()
+          this.getTeams()
+
           return
         }
+
         const teams = JSON.parse(value)
-        if (moment().unix() > teams.expireTime) {
-          this._getTeams()
+
+        if ( moment().unix() > teams.expireTime ) {
+          this.getTeams()
         } else {
           this.setState({
             isLoading: false,
@@ -83,38 +82,41 @@ export default class TeamsScreen extends React.Component {
         }
       })
       .catch(() => {
-        this._getTeams()
+        this.getTeams()
       })
   }
 
   render() {
-    if (this.state.isLoading) {
+    const { navigation: { state } } = this.props
+    const { isLoading, teams, error } = this.state
+
+    if ( isLoading ) {
       return (
-        <View style={styles.container}>
-          <StatsHeader name={this.props.navigation.state.routeName} />
+        <View style={ styles.container }>
+          <StatsHeader name={ state.routeName } />
           <ActivityIndicator
-            animating={this.state.isLoading}
-            style={[styles.centering, {height: 80}]}
+            animating={ isLoading }
+            style={[ styles.centering, {height: 80} ]}
             size="large" />
         </View>
       )
-    } else if (!this.state.isLoading && this.state.teams.length === 0 && this.state.error) {
+    } else if ( !isLoading && teams.length === 0 && error ) {
       return (
         <ErrorPage />
       )
     } else {
       return (
-        <View style={styles.container}>
-          <StatsHeader name={this.props.navigation.state.routeName} />
-          { this.state.teams && this.state.teams._cachedRowCount > 0 && this.state.error ?
-            <View style={styles.errMsg}><ScalableText style={styles.errMsgTxt}>Unable to load new data!</ScalableText></View> :
+        <View style={ styles.container }>
+          <StatsHeader name={ state.routeName } />
+          { teams && teams._cachedRowCount > 0 && error ?
+            <View style={ styles.errMsg }><ScalableText style={ styles.errMsgTxt }>Unable to load new data!</ScalableText></View> :
             <View></View>
           }
           <ListView
-            style={styles.teams}
-            refreshControl={this._refreshControl()}
-            dataSource={this.state.teams}
-            renderRow={this.renderRow.bind(this)} />
+            style={ styles.teams }
+            refreshControl={ this._refreshControl() }
+            dataSource={ teams }
+            renderRow={ this.renderRow.bind(this) } />
         </View>
       )
     }
@@ -123,26 +125,26 @@ export default class TeamsScreen extends React.Component {
   _refreshControl() {
     return (
       <RefreshControl
-        refreshing={this.state.refreshing}
-        onRefresh={()=>this._refreshListView()} />
+        refreshing={ this.state.refreshing }
+        onRefresh={ () => this._refreshListView() } />
     )
   }
 
   _refreshListView() {
     // Start Rendering Spinner
-    this.setState({refreshing: true})
-    this._getTeams()
+    this.setState({ refreshing: true })
+    this.getTeams()
   }
 
   renderRow(rowData) {
     return (
-      <TouchableOpacity style={styles.team} onPress={() => this.props.teamInfo(rowData)}>
-        <ScalableText style={styles.numberTxt}>{rowData.position}</ScalableText>
-        <View style={styles.info}>
-          <ScalableText style={styles.teamConstructor}>{rowData.Constructor.name}</ScalableText>
+      <TouchableOpacity style={ styles.team } onPress={ () => this.props.teams(rowData) }>
+        <ScalableText style={ styles.numberTxt }>{ rowData.position }</ScalableText>
+        <View style={ styles.info }>
+          <ScalableText style={ styles.teamConstructor }>{ rowData.Constructor.name }</ScalableText>
         </View>
-        <View style={styles.winsBox}><ScalableText style={styles.wins}>{rowData.wins}</ScalableText></View>
-        <View style={styles.pointsBox}><ScalableText style={styles.points}>{rowData.points}</ScalableText></View>
+        <View style={ styles.winsBox }><ScalableText style={ styles.wins }>{ rowData.wins }</ScalableText></View>
+        <View style={ styles.pointsBox }><ScalableText style={ styles.points }>{ rowData.points }</ScalableText></View>
       </TouchableOpacity>
     )
   }
@@ -157,12 +159,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#f94057',
     alignItems: 'center',
     justifyContent: 'center',
-    height: 16,
+    height: 16
   },
   errMsgTxt: {
     fontSize: 10,
     fontFamily: 'Raleway-Medium',
-    color: '#fff',
+    color: '#fff'
   },
   team: {
     flexDirection: 'row',
@@ -179,11 +181,11 @@ const styles = StyleSheet.create({
     fontFamily: 'Raleway-Medium',
     fontSize: 16,
     textAlign: 'center',
-    color: '#f94057',
+    color: '#f94057'
   },
   info: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
   teamConstructor: {
     fontFamily: 'Raleway-SemiBold',
@@ -192,7 +194,7 @@ const styles = StyleSheet.create({
   },
   winsBox: {
     width: 45,
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
   wins: {
     width: 45,
@@ -202,12 +204,19 @@ const styles = StyleSheet.create({
   },
   pointsBox: {
     width: 50,
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
   points: {
     color: '#f94057',
     fontFamily: 'Raleway-SemiBold',
     textAlign: 'right',
-    fontSize: 16,
+    fontSize: 16
   }
 })
+
+TeamsScreen.propTypes = {
+  navigation: PropTypes.object.isRequired,
+  teams: PropTypes.func.isRequired
+}
+
+module.exports = TeamsScreen

@@ -1,7 +1,6 @@
 /* @flow */
-/* eslint no-undef: "error" */
-/* eslint-env node */
-import React from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 
 import {
   StyleSheet,
@@ -13,26 +12,23 @@ import {
 
 import ScalableText from 'react-native-text'
 
-export default class HomeHeader extends React.Component {
-  static propTypes = {
-    navigation: React.PropTypes.object.isRequired,
-    title: React.PropTypes.string.isRequired
-  }
-
+class HomeHeader extends Component {
   constructor(props) {
     super(props)
   }
 
   render() {
+    const { navigation, title } = this.props
+
     return (
-      <View style={styles.header}>
+      <View style={ styles.header }>
         <TouchableHighlight
-          onPress={() => this.props.navigation.navigate('DrawerOpen')}>
+          onPress={ () => navigation.navigate('DrawerOpen') }>
           <Image
-            style={styles.btnLeft}
-            source={require('../../assets/images/btn-menu.png')} />
+            style={ styles.btnLeft }
+            source={ require('../../assets/images/btn-menu.png') } />
         </TouchableHighlight>
-        <ScalableText style={styles.title}>{this.props.title}</ScalableText>
+        <ScalableText style={ styles.title }>{ title }</ScalableText>
       </View>
     )
   }
@@ -57,3 +53,10 @@ const styles = StyleSheet.create({
     fontFamily: 'Raleway-SemiBold'
   }
 })
+
+HomeHeader.propTypes = {
+  navigation: PropTypes.object.isRequired,
+  title: PropTypes.string.isRequired
+}
+
+module.exports = HomeHeader

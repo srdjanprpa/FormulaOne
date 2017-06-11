@@ -1,9 +1,10 @@
 /* @flow */
-import React from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 
 import {
   View,
-  StatusBar,
+  StatusBar
 } from 'react-native'
 
 import SplashScreen from 'react-native-splash-screen'
@@ -12,32 +13,36 @@ import HomeHeader from '../Components/HomeHeader'
 import StandingsContent from './StandingsContent'
 
 
-export default class StandingsScreen extends React.Component {
-  static navigationOptions = {
-    drawer: () => ({
-      label: 'Standings',
-    }),
-  }
-  static propTypes = {
-    navigation: React.PropTypes.object.isRequired,
+class StandingsScreen extends Component {
+  constructor(props) {
+    super(props)
   }
 
   componentDidMount() {
     SplashScreen.hide()
   }
+
   render() {
+    const { navigation } = this.props
+
     return (
-      <View style={{flex: 1, backgroundColor: '#fff'}}>
+      <View style={{ flex: 1, backgroundColor: '#fff' }}>
         <StatusBar
           barStyle="light-content"
           backgroundColor={'#202930'} />
         <HomeHeader
           title="F1 Info"
-          navigation={this.props.navigation} />
+          navigation={ navigation } />
         <StandingsContent
-          team={(data) => {this.props.navigation.navigate('ConstructorScreen', {team: data})}}
+          teams={ (data) => { navigation.navigate('ConstructorScreen', {constructor: data} )} }
         />
       </View>
     )
   }
 }
+
+StandingsScreen.propTypes = {
+  navigation: PropTypes.object.isRequired
+}
+
+module.exports = StandingsScreen

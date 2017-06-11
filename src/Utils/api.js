@@ -1,13 +1,9 @@
-/*eslint no-undef: "error"*/
-/*eslint-env node*/
-// Prod
-// const F1 = 'https://oip3pj05jc.execute-api.eu-west-1.amazonaws.com/latest/f1'
-// Dev
-const F1 = 'https://oewbh13snf.execute-api.eu-west-1.amazonaws.com/latest/f1'
+// F1 API v6
+const F1 = 'https://bsbbycpjma.execute-api.eu-central-1.amazonaws.com/latest/f1'
 
 let api = {
   getCurrentCalendar() {
-    let url = `${F1}/current`
+    let url = `${F1}/current/calendar`
 
     return fetch(url).then((res) => res.json())
   },
@@ -21,65 +17,30 @@ let api = {
 
     return fetch(url).then((res) => res.json())
   },
-  getQualifyingResults(data) {
-    const url = `${F1}/results/qualifying`
+  getQualifyingResults(season, round) {
+    const url = `${F1}/results/season/${season}/round/${round}/qualifying`
 
-    return fetch(url, {
-      method: 'post',
-      headers: {
-        'Accept': 'application/json, text/plain, */*',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(data)
-    })
-    .then((res) => {
-      return res.json()
-    })
+    return fetch(url).then((res) => res.json())
   },
-  getRaceResults(data) {
-    const url = `${F1}/results/race`
+  getRaceResults(season, round) {
+    const url = `${F1}/results/season/${season}/round/${round}/race`
 
-    return fetch(url, {
-      method: 'post',
-      headers: {
-        'Accept': 'application/json, text/plain, */*',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(data)
-    })
-    .then((res) => {
-      return res.json()
-    })
+    return fetch(url).then((res) => res.json())
   },
-  getConstructorDetails(data) {
-    const url = `${F1}/constructor/details`
+  getConstructorDetails(constructorId) {
+    const url = `${F1}/constructor/${constructorId}/details`
 
-    return fetch(url, {
-      method: 'post',
-      headers: {
-        'Accept': 'application/json, text/plain, */*',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(data)
-    })
-    .then((res) => {
-      return res.json()
-    })
+    return fetch(url).then((res) => res.json())
   },
-  getConstructorDrivers(data) {
-    const url = `${F1}/constructor/driver/details`
+  getConstructorDrivers(constructorId) {
+    const url = `${F1}/constructor/${constructorId}/drivers/details`
 
-    return fetch(url, {
-      method: 'post',
-      headers: {
-        'Accept': 'application/json, text/plain, */*',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(data)
-    })
-    .then((res) => {
-      return res.json()
-    })
+    return fetch(url).then((res) => res.json())
+  },
+  getCircuitInfo(circuitId) {
+    const url = `${F1}/circuit/${circuitId}/details`
+
+    return fetch(url).then((res) => res.json())
   }
 }
 

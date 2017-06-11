@@ -1,8 +1,6 @@
 /* @flow */
-/* eslint no-undef: "error" */
-/* eslint-env node */
-/*eslint-env es6 */
-import React from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 
 import {
   View,
@@ -10,8 +8,8 @@ import {
   StyleSheet,
   TouchableHighlight,
   Platform,
-  ScrollView,
   ActivityIndicator,
+  ScrollView
 } from 'react-native'
 
 import ScalableText from 'react-native-text'
@@ -23,34 +21,32 @@ import ErrorPage from '../Components/ErrorPage'
 
 import api from '../Utils/api'
 
-export default class ConstructorScreen extends React.Component {
-  static propTypes = {
-    navigation: React.PropTypes.object.isRequired
-  }
-
+class ConstructorScreen extends Component {
   constructor(props) {
     super(props)
+
     this.state = {
       isRefreshing: false,
       error: false,
       team: null,
       drivers: null,
-      isLoading: true,
+      isLoading: true
     }
   }
 
-  _getData() {
+  getData() {
+    const { constructorId } = this.props.navigation.state.params.constructor.Constructor
+
     return Promise.all([
-      api.getConstructorDetails({teamId: this.props.navigation.state.params.team.Constructor.constructorId}),
-      api.getConstructorDrivers({teamId: this.props.navigation.state.params.team.Constructor.constructorId}),
-    ]).then(promise => {
+      api.getConstructorDetails(constructorId),
+      api.getConstructorDrivers(constructorId)
+    ]).then((promise) => {
       this.setState({
         isLoading: false,
         team: promise[0],
         drivers: promise[1]
       })
-    }).catch(err => {
-      console.log('Error', err)
+    }).catch(() => {
       this.setState({
         isLoading: false,
         error: true,
@@ -61,108 +57,148 @@ export default class ConstructorScreen extends React.Component {
   }
 
   componentWillMount() {
-    this._getData()
+    this.getData()
   }
 
   render() {
-    const team = this.props.navigation.state.params.team
+    const { name, constructorId } = this.props.navigation.state.params.constructor.Constructor
+    const { isLoading, error } = this.state
 
-    if (this.state.isLoading) {
+    if (isLoading) {
       return (
-        <View style={styles.container}>
-          <View style={styles.header}>
+        <View style={ styles.container }>
+          <View style={ styles.header }>
             <TouchableHighlight
-              style={styles.btn}
-              onPress={() => this.props.navigation.goBack()}>
+              style={ styles.btn }
+              onPress={ () => this.props.navigation.goBack() }>
               <Image
-                style={styles.btnLeft}
-                source={require('../../assets/images/btn-back.png')} />
+                style={ styles.btnLeft }
+                source={ require('../../assets/images/btn-back.png') } />
             </TouchableHighlight>
-            <ScalableText style={styles.title}>F1 {team.Constructor.name}</ScalableText>
+            <ScalableText style={ styles.title }>F1 { name }</ScalableText>
           </View>
           <ActivityIndicator
-            animating={this.state.isLoading}
-            style={[styles.centering, {height: 80}]}
+            animating={ isLoading }
+            style={[ styles.centering, {height: 80} ]}
             size="large" />
         </View>
       )
-    } else if (!this.state.isLoading && this.state.error) {
+    } else if (!isLoading && error) {
       return (
         <ErrorPage />
       )
     } else {
+      const { team: { championship, wins, races, polePosition }, drivers } = this.state
+
+      const teamsDriver = drivers.map(function(driver, index) {
+        if ( index % 2 ) {
+          return (
+            <View
+              key={ driver.code }
+              style={ styles.info }>
+              <DriverInfo
+                code={ driver.code }
+                firstName={ driver.familyName }
+                lastName={ driver.givenName }
+                number={ driver.permanentNumber }
+                nationality={ driver.nationality }
+                dob={ driver.dateOfBirth }
+                races={ driver.races }
+                championship={ driver.championship }
+                wins={ driver.wins }
+                polePosition={ driver.polePosition }
+                podiums={ driver.podiums }
+                stylePosition={ 'left' }
+              />
+              <Avatar
+                code={ driver.code }
+                stylePosition={ 'right' }
+              />
+            </View>
+          )
+        } else {
+          return (
+            <View
+              key={ driver.code }
+              style={ styles.info }>
+              <Avatar
+                code={ driver.code }
+                stylePosition={ 'left' }
+              />
+              <DriverInfo
+                code={ driver.code }
+                firstName={ driver.familyName }
+                lastName={ driver.givenName }
+                number={ driver.permanentNumber }
+                nationality={ driver.nationality }
+                dob={ driver.dateOfBirth }
+                races={ driver.races }
+                championship={ driver.championship }
+                wins={ driver.wins }
+                polePosition={ driver.polePosition }
+                podiums={ driver.podiums }
+                stylePosition={ 'right' }
+              />
+            </View>
+          )
+        }
+
+      })
+
       return (
-        <View style={styles.container}>
-          <View style={styles.header}>
-            <TouchableHighlight
-              style={styles.btn}
-              onPress={() => this.props.navigation.goBack()}>
+        <Image source={require('../../assets/images/bg-constructor.jpg')} style={ styles.backgroundImage }>
+          <View style={ styles.container }>
+            <View style={ styles.header }>
+              <TouchableHighlight
+                style={ styles.btn }
+                onPress={ () => this.props.navigation.goBack() }>
+                <Image
+                  style={ styles.btnLeft }
+                  source={ require('../../assets/images/btn-back.png') } />
+              </TouchableHighlight>
+              <ScalableText style={ styles.title }>F1 { name }</ScalableText>
+            </View>
+            <ScrollView style={ styles.content}>
               <Image
-                style={styles.btnLeft}
-                source={require('../../assets/images/btn-back.png')} />
-            </TouchableHighlight>
-            <ScalableText style={styles.title}>F1 {team.Constructor.name}</ScalableText>
+                style={ styles.teamCar }
+                source={{ uri: `https://s3-eu-west-1.amazonaws.com/f1-storage/Cars/${ constructorId }.jpg` }}/>
+              <ConstructorInfo
+                championship={ championship }
+                wins={ wins }
+                races={ races }
+                polePosition={ polePosition }
+              />
+              { teamsDriver }
+            </ScrollView>
           </View>
-          <ScrollView style={styles.content}>
-            <ConstructorInfo
-              teamId={this.props.navigation.state.params.team.Constructor.constructorId}
-              championship={this.state.team.championship}
-              wins={this.state.team.wins}
-              races={this.state.team.races}
-              polePosition={this.state.team.polePosition}
-            />
-            <View style={styles.info}>
-              <Avatar
-                code={this.state.drivers[0].code}
-              />
-              <DriverInfo
-                code={this.state.drivers[0].code}
-                firstName={this.state.drivers[0].familyName}
-                lastName={this.state.drivers[0].givenName}
-                number={this.state.drivers[0].permanentNumber}
-                country={this.state.drivers[0].nationality}
-                dob={this.state.drivers[0].dateOfBirth}
-                races={this.state.drivers[0].races}
-                championship={this.state.drivers[0].championship}
-                victories={this.state.drivers[0].wins}
-                polePosition={this.state.drivers[0].polePosition}
-              />
-            </View>
-            <View style={styles.divider}></View>
-            <View style={styles.info}>
-              <DriverInfo
-                code={this.state.drivers[1].code}
-                firstName={this.state.drivers[1].familyName}
-                lastName={this.state.drivers[1].givenName}
-                number={this.state.drivers[1].permanentNumber}
-                country={this.state.drivers[1].nationality}
-                dob={this.state.drivers[1].dateOfBirth}
-                races={this.state.drivers[1].races}
-                championship={this.state.drivers[1].championship}
-                victories={this.state.drivers[1].wins}
-                polePosition={this.state.drivers[1].polePosition}
-              />
-              <Avatar
-                code={this.state.drivers[1].code}
-              />
-            </View>
-          </ScrollView>
-        </View>
+        </Image>
       )
     }
   }
-
-  _onRefresh = () => {
-    console.log('test')
-  }
 }
 
-
-
 const styles = StyleSheet.create({
-  container: {
+  backgroundImage: {
     flex: 1,
-    backgroundColor: '#fff',
+    width: null,
+    height: null,
+    backgroundColor: '#fff'
+  },
+  hr: {
+    height: 1,
+    backgroundColor: '#f1f2f6',
+    marginLeft: 10,
+    marginRight: 10,
+    marginBottom: 10
+  },
+  teamCar: {
+    height: 60,
+    width: 220,
+    // marginLeft: 20,
+    resizeMode: 'contain'
+  },
+  container: {
+    flex: 1
   },
   centering: {
     alignItems: 'center',
@@ -187,7 +223,7 @@ const styles = StyleSheet.create({
     width: 40
   },
   content: {
-    flex: 1,
+    flex: 1
   },
   title: {
     color: '#fff',
@@ -195,12 +231,15 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontFamily: 'Raleway-SemiBold'
   },
-  divider: {
-    height: 1,
-    backgroundColor: '#fff',
-  },
   info: {
     flex: 1,
     flexDirection: 'row',
-  },
+    paddingVertical: 10
+  }
 })
+
+ConstructorScreen.propTypes = {
+  navigation: PropTypes.object.isRequired
+}
+
+module.exports = ConstructorScreen

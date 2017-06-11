@@ -1,25 +1,22 @@
 /* @flow */
-import React from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 
 import {
   View,
   StyleSheet,
-  Platform,
+  Platform
 } from 'react-native'
 
 import ScalableText from 'react-native-text'
 
-export default class StatsHeader extends React.Component {
-  static propTypes = {
-    name: React.PropTypes.string.isRequired,
-  }
-
+class StatsHeader extends Component {
   render() {
     return (
-      <View style={styles.header}>
-        <ScalableText style={styles.position}>#</ScalableText>
-        <ScalableText style={styles.name}> {this.props.name} </ScalableText>
-        <ScalableText style={styles.time}>Time</ScalableText>
+      <View style={ styles.header }>
+        <ScalableText style={[ styles.position, styles.txt ]}>#</ScalableText>
+        <ScalableText style={[ styles.name, styles.txt ]}> {this.props.name} </ScalableText>
+        <ScalableText style={[ styles.time, styles.txt ]}>Time</ScalableText>
       </View>
     )
   }
@@ -31,28 +28,30 @@ const styles = StyleSheet.create({
   },
   header: {
     paddingHorizontal: 10,
-    backgroundColor: '#2a3540',
-    flexDirection: 'row',
+    backgroundColor: '#292929',
+    flexDirection: 'row'
+  },
+  txt: {
+    lineHeight: Platform.OS === 'ios' ? 22 : 20,
+    height: 22,
+    color: '#fff'
   },
   position: {
-    width: 20,
-    height: 22,
-    lineHeight: Platform.OS === 'ios' ? 22 : 20,
     marginRight: 10,
-    textAlign: 'center',
-    color: '#fff',
+    width: 20,
+    textAlign: 'center'
   },
   name: {
-    color: '#fff',
-    flex: 1,
-    height: 22,
-    lineHeight: Platform.OS === 'ios' ? 22 : 20,
+    flex: 1
   },
   time: {
     width: 95,
-    height: 22,
-    lineHeight: Platform.OS === 'ios' ? 22 : 20,
-    color: '#fff',
     textAlign: 'right'
   }
 })
+
+StatsHeader.propTypes = {
+  name: PropTypes.string.isRequired
+}
+
+module.exports = StatsHeader

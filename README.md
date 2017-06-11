@@ -1,6 +1,6 @@
-# Formula One - React Native APP
+# F1 Stats - React Native APP
 
-React Native app for Formula One, statistics for drivers and teams and calendar for Formula One
+React Native app F1 Stats, statistics for drivers, teams and calendar for F1
 
 ![Formula-One-APP](https://raw.githubusercontent.com/srdjanprpa/FormulaOne/master/assets/AppScreen/AppImg-1.png)
 ![Formula-One-APP](https://raw.githubusercontent.com/srdjanprpa/FormulaOne/master/assets/AppScreen/AppImg-2.png)
@@ -44,8 +44,7 @@ npm install
 
 ### Contribute
 
-I using [Eslint](http://eslint.org) for code linting, rules are available in `.eslintrc` file.
-
+I using [Eslint](http://eslint.org) for code linting, rules are available in `.eslintrc.json` file.
 
 #### Run linter
 

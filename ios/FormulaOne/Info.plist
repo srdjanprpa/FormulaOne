@@ -45,6 +45,7 @@
 		<string>Raleway-Medium.ttf</string>
 		<string>Raleway-Regular.ttf</string>
 		<string>Raleway-SemiBold.ttf</string>
+		<string>Transponder-AOE.ttf</string>
 	</array>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>

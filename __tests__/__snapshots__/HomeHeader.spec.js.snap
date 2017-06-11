@@ -48,12 +48,17 @@ exports[`<HomeHeader /> renders correctly 1`] = `
     allowFontScaling={true}
     ellipsizeMode="tail"
     style={
-      Object {
-        "color": "#fff",
-        "fontFamily": "Raleway-SemiBold",
-        "fontSize": 18,
-        "marginLeft": 15,
-      }
+      Array [
+        Object {
+          "color": "#fff",
+          "fontFamily": "Raleway-SemiBold",
+          "fontSize": 18,
+          "marginLeft": 15,
+        },
+        Object {
+          "fontSize": 36,
+        },
+      ]
     }>
     Formula One
   </Text>

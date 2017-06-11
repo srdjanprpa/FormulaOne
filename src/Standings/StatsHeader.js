@@ -1,66 +1,63 @@
 /* @flow */
-import React from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 
 import {
   View,
   StyleSheet,
-  Platform,
+  Platform
 } from 'react-native'
 
 import ScalableText from 'react-native-text'
 
-export default class StatsHeader extends React.Component {
-  static propTypes = {
-    name: React.PropTypes.string.isRequired,
+class StatsHeader extends Component {
+  constructor(props) {
+    super(props)
   }
 
   render() {
     return (
-      <View style={styles.header}>
-        <ScalableText style={styles.position}>#</ScalableText>
-        <ScalableText style={styles.name}> {this.props.name} </ScalableText>
-        <ScalableText style={styles.wins}>Wins</ScalableText>
-        <ScalableText style={styles.points}>Points</ScalableText>
+      <View style={ styles.header }>
+        <ScalableText style={[ styles.position, styles.txt ]}>#</ScalableText>
+        <ScalableText style={[ styles.name, styles.txt ]}> { this.props.name } </ScalableText>
+        <ScalableText style={[ styles.wins, styles.txt ]}>Wins</ScalableText>
+        <ScalableText style={[ styles.points, styles.txt ]}>Points</ScalableText>
       </View>
     )
   }
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1
-  },
   header: {
     paddingHorizontal: 10,
     backgroundColor: '#2a3540',
-    flexDirection: 'row',
+    flexDirection: 'row'
+  },
+  txt: {
+    lineHeight: Platform.OS === 'ios' ? 22 : 20,
+    height: 22,
+    color: '#fff'
   },
   position: {
-    width: 35,
-    height: 22,
-    lineHeight: Platform.OS === 'ios' ? 22 : 20,
     marginRight: 10,
-    textAlign: 'center',
-    color: '#fff',
+    width: 35,
+    textAlign: 'center'
   },
   name: {
-    color: '#fff',
-    flex: 1,
-    height: 22,
-    lineHeight: Platform.OS === 'ios' ? 22 : 20,
+    flex: 1
   },
   wins: {
     width: 45,
-    height: 22,
-    lineHeight: Platform.OS === 'ios' ? 22 : 20,
-    color: '#fff',
     textAlign: 'center'
   },
   points: {
     width: 50,
-    height: 22,
-    lineHeight: Platform.OS === 'ios' ? 22 : 20,
-    color: '#fff',
     textAlign: 'right'
   }
 })
+
+StatsHeader.propTypes = {
+  name: PropTypes.string.isRequired
+}
+
+module.exports = StatsHeader
